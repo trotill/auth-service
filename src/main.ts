@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { writeFile } from 'fs/promises';
 import * as process from 'process';
+import { getKeyPairs, test } from './utils/secure';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

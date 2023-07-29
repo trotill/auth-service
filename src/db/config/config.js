@@ -1,5 +1,7 @@
+const { UsersModel } = require('../models/users.model');
 require('dotenv').config({ path: '.env' });
 
+const models = [UsersModel];
 module.exports = {
   development: {
     username: process.env.DB_PATH,
@@ -11,5 +13,6 @@ module.exports = {
     define: {
       freezeTableName: true,
     },
+    models,
   },
 };

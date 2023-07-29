@@ -7,9 +7,9 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
     const passwd=new jshashes.SHA1().b64(login + password)
     console.log('admin password',passwd)
-    return queryInterface.bulkInsert('user', [{
+    return queryInterface.bulkInsert('users', [{
       login: 'admin',
-      group: 'admin',
+      role: 'admin',
       firstName:'firstName',
       password: new jshashes.SHA1().b64(login + password),
       lastName:'lastName',
@@ -20,6 +20,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    return queryInterface.bulkDelete('user', null, {});
+    return queryInterface.bulkDelete('users', null, {});
   }
 };
