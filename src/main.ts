@@ -3,10 +3,13 @@ import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { writeFile } from 'fs/promises';
 import * as process from 'process';
-import { getKeyPairs, test } from './utils/secure';
+import { ValidationPipe } from '@nestjs/common';
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.useGlobalPipes(new ValidationPipe({ transform: true }));
+  app.use(cookieParser());
   const config = new DocumentBuilder()
     .setTitle('Authority service openApi')
     .setDescription('API Docs')

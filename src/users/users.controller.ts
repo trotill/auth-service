@@ -7,9 +7,17 @@ import {
   Param,
   Put,
   Post,
+  Query,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { GetAllParam, UserCreate, UserList, UserLogin } from './users.dto';
+import {
+  GetAllParam,
+  UserBase,
+  UserCreate,
+  UserList,
+  UserLogin,
+  UserUpdate,
+} from './users.dto';
 import { UsersService } from './users.service';
 
 @ApiTags('Управление пользователями')
@@ -19,31 +27,31 @@ export class UsersController {
   @ApiOperation({ summary: 'Создать пользователя' })
   @HttpCode(204)
   @Post()
-  async create(@Body() body: UserCreate): Promise<string> {
-    return this.usersService.create(body);
+  async create(@Body() body: UserCreate) {
+    await this.usersService.create(body);
   }
 
   @ApiOperation({ summary: 'Изменить пользователя' })
   @HttpCode(204)
   @Put(':login')
   async update(
-    @Body() body: UserCreate,
+    @Body() body: UserUpdate,
     @Param() { login }: UserLogin,
   ): Promise<void> {
-    return this.usersService.update(login, body);
+    await this.usersService.update(login, body);
   }
 
   @ApiOperation({ summary: 'Удалить пользователя' })
   @HttpCode(204)
   @Delete(':login')
   async delete(@Param() { login }: UserLogin): Promise<void> {
-    return this.usersService.delete(login);
+    await this.usersService.delete(login);
   }
 
   @ApiOperation({ summary: 'Получить список пользователей' })
   @ApiResponse({ status: 200, type: UserList })
   @Get()
-  async getAll(@Body() body: GetAllParam): Promise<UserList> {
-    return this.usersService.getAll(body);
+  async getAll(@Query() query: GetAllParam): Promise<UserList> {
+    return this.usersService.getAll(query);
   }
 }

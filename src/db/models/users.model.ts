@@ -1,8 +1,18 @@
-import { Column, DataType, Model, Table } from 'sequelize-typescript';
-import { UserCreate } from '../../users/users.dto';
+import {
+  BelongsTo,
+  Column,
+  DataType,
+  ForeignKey,
+  HasMany,
+  HasOne,
+  Model,
+  Table,
+} from 'sequelize-typescript';
+import { UserBase } from '../../users/users.dto';
+import { SessionsModel } from './sessions.model';
 
 @Table({ tableName: 'users' })
-export class UsersModel extends Model<UsersModel, UserCreate> {
+export class UsersModel extends Model<UsersModel, UserBase> {
   @Column({
     type: DataType.STRING,
     allowNull: false,
