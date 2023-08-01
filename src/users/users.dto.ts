@@ -2,15 +2,11 @@ import { ApiProperty, OmitType, PartialType } from '@nestjs/swagger';
 import {
   IsBoolean,
   IsIn,
-  IsInt,
   IsNotEmpty,
-  IsNumber,
   IsOptional,
-  IsPositive,
   IsString,
-  Min,
 } from 'class-validator';
-import { Transform, TransformFnParams, Type } from 'class-transformer';
+import { Transform, TransformFnParams } from 'class-transformer';
 
 export const SORT_ORDERS = ['ASC', 'DESC'];
 

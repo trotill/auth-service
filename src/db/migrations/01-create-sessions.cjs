@@ -13,7 +13,6 @@ module.exports = {
       },
       sessionId: {
         type: Sequelize.STRING,
-        unique:true,
         defaultValue: '-'
       },
       refreshToken:{

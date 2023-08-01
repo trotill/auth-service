@@ -1,8 +1,5 @@
 import { existsSync, readFileSync } from 'fs';
-import { execSync } from 'child_process';
 import * as crypto from 'crypto';
-import * as jwt from 'jsonwebtoken';
-import * as process from 'process';
 import { KEY_PATH } from './const';
 import { promisify } from 'util';
 import { writeFile } from 'fs/promises';
@@ -33,11 +30,3 @@ export const getKeyPairs = async (): Promise<{
     privateKey: readFileSync(`${KEY_PATH}/private.key`).toString(),
   };
 };
-
-export function test() {
-  const privateKey = readFileSync(`${KEY_PATH}/private.key`);
-  const publicKey = readFileSync(`${KEY_PATH}/public.key`);
-  const token = jwt.sign({ foo: 'bar' }, privateKey, { algorithm: 'RS256' });
-  const decoded = jwt.verify(token, publicKey);
-  console.log(decoded);
-}

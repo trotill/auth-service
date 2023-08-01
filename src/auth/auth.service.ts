@@ -1,7 +1,6 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { LoginParams } from './auth.dto';
-import { UserItem, UserLogin, UserRoles } from '../users/users.dto';
-import { getKeyPairs } from '../utils/secure';
+import { UserItem, UserRoles } from '../users/users.dto';
 import { InjectModel } from '@nestjs/sequelize';
 import { UsersModel } from '../db/models/users.model';
 import {
@@ -10,8 +9,7 @@ import {
   REFRESH_TIMEOUT,
 } from '../utils/const';
 import { SessionsModel } from '../db/models/sessions.model';
-import { verify, sign, JwtPayload } from 'jsonwebtoken';
-import { promisify } from 'util';
+import { verify, sign } from 'jsonwebtoken';
 import { JwtTokenPayload } from './auth.types';
 import jwtKeys from '../utils/keys';
 
@@ -84,7 +82,7 @@ export class AuthService {
       } else {
         await this.sessionRepository.create({
           refreshToken: tokens.refresh,
-          sessionId: sid,
+          sessionId,
           login,
         });
       }

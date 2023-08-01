@@ -1,15 +1,6 @@
 import { ApiProperty, IntersectionType } from '@nestjs/swagger';
-import { UserLogin, UserRoles } from '../users/users.dto';
-import { IsBoolean, IsIn, IsNotEmpty, IsString } from 'class-validator';
+import { UserLogin } from '../users/users.dto';
 import { DEFAULT_SESSION_ID } from '../utils/const';
-
-export class AuthLoginDto {
-  @ApiProperty({
-    example: 'admin',
-    description: 'Логин',
-  })
-  login: string;
-}
 
 export class SessionId {
   @ApiProperty({
@@ -37,13 +28,6 @@ export class JWT_Refresh {
     required: true,
   })
   refreshToken: string;
-}
-export class JWT_Access {
-  @ApiProperty({
-    description: 'access токен',
-    required: true,
-  })
-  accessToken: string;
 }
 
 export class AuthSessions extends UserLogin {

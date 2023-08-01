@@ -1,15 +1,5 @@
-import {
-  BelongsTo,
-  Column,
-  DataType,
-  ForeignKey,
-  HasMany,
-  HasOne,
-  Model,
-  Table,
-} from 'sequelize-typescript';
+import { Column, DataType, Model, Table } from 'sequelize-typescript';
 import { UserBase } from '../../users/users.dto';
-import { SessionsModel } from './sessions.model';
 
 @Table({ tableName: 'users' })
 export class UsersModel extends Model<UsersModel, UserBase> {

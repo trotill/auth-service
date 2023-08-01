@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JWT_Refresh, LoginParams } from './auth.dto';
-import { UserItem, UserList, UserLogin } from '../users/users.dto';
+import { UserItem, UserLogin } from '../users/users.dto';
 import { AuthService } from './auth.service';
 import { ACCESS_TOKEN_COOKIE_NAME } from '../utils/const';
 

@@ -1,11 +1,4 @@
-import {
-  BelongsTo,
-  Column,
-  DataType,
-  ForeignKey,
-  Model,
-  Table,
-} from 'sequelize-typescript';
+import { Column, DataType, Model, Table } from 'sequelize-typescript';
 import { AuthSessions } from '../../auth/auth.dto';
 import { DEFAULT_SESSION_ID } from '../../utils/const';
 
@@ -29,7 +22,6 @@ export class SessionsModel extends Model<SessionsModel, AuthSessions> {
   @Column({
     type: DataType.STRING,
     allowNull: false,
-    unique: true,
     defaultValue: DEFAULT_SESSION_ID,
   })
   sessionId: string;

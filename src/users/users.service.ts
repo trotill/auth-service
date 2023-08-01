@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import {
   GetAllParam,
-  UserBase,
   UserCreate,
   UserItem,
   UserList,
@@ -18,10 +17,8 @@ export class UsersService {
   ) {}
   async getAll(query: GetAllParam): Promise<UserList> {
     const { limit, offset, sort, order, search } = query;
-    const search1 = undefined;
     const or = search
       ? {
-          //name: { [Op.iLike]: `%${nameContains.trim()}%` }
           firstName: {
             [Op.like]: `%${search}%`,
           },
