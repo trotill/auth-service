@@ -10,21 +10,22 @@ import {
   REFRESH_TIMEOUT,
 } from '../utils/const';
 import { SessionsModel } from '../db/models/sessions.model';
-import * as jwt from 'jsonwebtoken';
+import { verify, sign, JwtPayload } from 'jsonwebtoken';
 import { promisify } from 'util';
+import { JwtTokenPayload } from './auth.types';
+import jwtKeys from '../utils/keys';
 
 @Injectable()
-export class AuthService implements OnModuleInit {
+export class AuthService {
   privateKey: string;
   publicKey: string;
   constructor(
     @InjectModel(UsersModel) private userRepository: typeof UsersModel,
     @InjectModel(SessionsModel) private sessionRepository: typeof SessionsModel,
-  ) {}
-  async onModuleInit() {
-    const keys = await getKeyPairs();
-    this.privateKey = keys.privateKey;
-    this.publicKey = keys.publicKey;
+  ) {
+    const { privateKey, publicKey } = jwtKeys.keys;
+    this.privateKey = privateKey;
+    this.publicKey = publicKey;
   }
   async regenJwtPairByLogin({
     login,
@@ -35,12 +36,12 @@ export class AuthService implements OnModuleInit {
     role: string;
     sessionId: string;
   }) {
-    const accessToken = jwt.sign(
+    const accessToken = sign(
       { login, role, sessionId, type: 'access' },
       this.privateKey,
       { algorithm: 'RS256', expiresIn: ACCESS_TIMEOUT },
     );
-    const refreshToken = jwt.sign(
+    const refreshToken = sign(
       { login, role, sessionId, type: 'refresh' },
       this.privateKey,
       { algorithm: 'RS256', expiresIn: REFRESH_TIMEOUT },
@@ -96,8 +97,13 @@ export class AuthService implements OnModuleInit {
     await this.sessionRepository.destroy({ where: { login } });
     await this.userRepository.destroy({ where: { login } });
   }
-  get verify() {
-    return promisify(jwt.verify);
+  verify(token: string, publicKey: string): Promise<JwtTokenPayload> {
+    return new Promise((resolve, reject) => {
+      verify(token, publicKey, (err, decoded) => {
+        if (err) reject(err);
+        resolve(decoded as JwtTokenPayload);
+      });
+    });
   }
   async refresh(refreshToken: string) {
     const check = await this.verify(refreshToken, this.publicKey);

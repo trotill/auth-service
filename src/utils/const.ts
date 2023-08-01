@@ -7,3 +7,4 @@ export const {
 } = process.env;
 export const DEFAULT_SESSION_ID = '-';
 export const ACCESS_TOKEN_COOKIE_NAME = 'access';
+export const IGNORE_CHECK_TOKEN_ROUTE_LIST = ['/auth/login', '/auth/refresh'];

@@ -5,8 +5,9 @@ import { writeFile } from 'fs/promises';
 import * as process from 'process';
 import { ValidationPipe } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
-
+import jwtKeys from './utils/keys';
 async function bootstrap() {
+  await jwtKeys.init();
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
   app.use(cookieParser());

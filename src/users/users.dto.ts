@@ -151,7 +151,7 @@ export class GetAllParam {
 
   @ApiProperty({
     description: 'Поисковая строка. Поиск по имени, фамилии, email',
-    example: 'mail.ru',
+    example: '',
     required: false,
   })
   @IsOptional()
