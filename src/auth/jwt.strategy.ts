@@ -1,13 +1,20 @@
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 
 import { ACCESS_TOKEN_COOKIE_NAME } from '../utils/const';
 import jwtKeys from '../utils/keys';
+import { InjectModel } from '@nestjs/sequelize';
+import { UsersModel } from '../db/models/users.model';
+import { SessionsModel } from '../db/models/sessions.model';
+import { errorMessage } from '../utils/error';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor() {
+  constructor(
+    @InjectModel(UsersModel) private userRepository: typeof UsersModel,
+    @InjectModel(SessionsModel) private sessionRepository: typeof SessionsModel,
+  ) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
         (req) => {
@@ -15,6 +22,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
           if (req && req.cookies) {
             token = req.cookies[ACCESS_TOKEN_COOKIE_NAME];
           }
+
           return token;
         },
       ]),
@@ -24,6 +32,13 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate({ role, login, aud, exp, iss }) {
+    const { locked } =
+      (await this.userRepository.findOne({
+        where: { login },
+        raw: true,
+      })) ?? {};
+    if (locked)
+      throw new HttpException(errorMessage.UserLocked, HttpStatus.FORBIDDEN);
     return {
       role,
       login,

@@ -52,7 +52,7 @@ export class AuthService {
   }
   async login(params: LoginParams) {
     const { login, password, sessionId = DEFAULT_SESSION_ID } = params;
-    //ToDo разрбраться с отношениями, делать один запрос вместо 2х
+    //ToDo разобраться с отношениями, делать один запрос вместо 2х
     const user = await this.userRepository.findOne({
       raw: true,
       where: { login },
@@ -64,12 +64,17 @@ export class AuthService {
         },
       },*/
     });
+    if (!user)
+      throw new HttpException(errorMessage.UserNotFound, HttpStatus.FORBIDDEN);
+    if (user.locked) {
+      throw new HttpException(errorMessage.UserLocked, HttpStatus.FORBIDDEN);
+    }
     const { sessionId: sid } =
       (await this.sessionRepository.findOne({
         raw: true,
-        where: { login },
+        where: { login, sessionId },
       })) ?? {};
-    if (user?.password === password) {
+    if (user.password === password) {
       const tokens = await this.regenJwtPairByLogin({
         login,
         role: user.role as string,
@@ -98,7 +103,7 @@ export class AuthService {
   async logout(login: string) {
     await this.sessionRepository.destroy({ where: { login } });
   }
-  verify(token: string, publicKey: string): Promise<JwtTokenPayload> {
+  async verify(token: string, publicKey: string): Promise<JwtTokenPayload> {
     return new Promise((resolve, reject) => {
       verify(token, publicKey, (err, decoded) => {
         if (err) reject(err);
@@ -107,18 +112,34 @@ export class AuthService {
     });
   }
   async refresh(refreshToken: string) {
-    const check = await this.verify(refreshToken, this.publicKey);
+    const check = await this.verify(refreshToken, this.publicKey).catch(() => {
+      throw new HttpException(
+        errorMessage.RefreshTokenError,
+        HttpStatus.BAD_REQUEST,
+      );
+    });
+    const user = await this.userRepository.findOne({
+      raw: true,
+      where: { login: check.login },
+    });
+    if (!user)
+      throw new HttpException(
+        errorMessage.UserNotFound,
+        HttpStatus.BAD_REQUEST,
+      );
+    if (user.locked) {
+      throw new HttpException(errorMessage.UserLocked, HttpStatus.FORBIDDEN);
+    }
     const session = await this.sessionRepository.findOne({
       raw: true,
-      where: { refreshToken },
+      where: { refreshToken, login: check.login, sessionId: check.sessionId },
     });
     if (session) {
-      const tokens = await this.regenJwtPairByLogin({
+      return this.regenJwtPairByLogin({
         login: session.login,
         role: check.role,
         sessionId: session.sessionId,
       });
-      return tokens;
     }
     //Если сессия отсутствует, исключение
     throw new HttpException(
@@ -127,7 +148,14 @@ export class AuthService {
     );
   }
   async getUserInfoByToken(accessToken: string): Promise<UserItem> {
-    const { login } = await this.verify(accessToken, this.publicKey);
+    const { login } = await this.verify(accessToken, this.publicKey).catch(
+      () => {
+        throw new HttpException(
+          errorMessage.Unauthorized,
+          HttpStatus.UNAUTHORIZED,
+        );
+      },
+    );
 
     const { role, locked, createdAt, updatedAt, lastName, firstName, email } =
       (await this.userRepository.findOne({ where: { login }, raw: true })) ??

@@ -4,4 +4,7 @@ export enum errorMessage {
   SessionNotFound = 'SessionNotFound',
   UserNotFound = 'UserNotFound',
   NotEnoughAccessRights = 'NotEnoughAccessRights',
+  Unauthorized = 'Unauthorized',
+  UserLocked = 'UserLocked',
+  RefreshTokenError = 'RefreshTokenError',
 }

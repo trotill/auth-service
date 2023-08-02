@@ -16,13 +16,6 @@ export class JwtGlobalGuard extends AuthGuard('jwt') {
       IGNORE_CHECK_TOKEN_ROUTE_LIST.includes(context.args[0].url)
     )
       return true;
-    const isPublic = this.reflector.getAllAndOverride<boolean>(
-      jwtKeys.keys.publicKey,
-      [context.getHandler(), context.getClass()],
-    );
-    if (isPublic) {
-      return true;
-    }
     return super.canActivate(context);
   }
 }
