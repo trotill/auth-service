@@ -1,7 +1,7 @@
 import * as process from 'process';
 
 export const {
-  KEY_PATH = './',
+  KEY_PATH = process.env.STORE_PATH,
   ACCESS_TIMEOUT = '60s',
   REFRESH_TIMEOUT = '90d',
 } = process.env;

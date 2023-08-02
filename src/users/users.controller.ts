@@ -9,6 +9,8 @@ import {
   Post,
   Query,
   Req,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import {
@@ -21,6 +23,7 @@ import {
 } from './users.dto';
 import { UsersService } from './users.service';
 import { Roles } from '../guard/roles.decorator';
+import { errorMessage } from '../utils/error';
 
 @ApiTags('Управление пользователями')
 @Controller('users')
@@ -41,15 +44,23 @@ export class UsersController {
     @Body() body: UserUpdate,
     @Param() { login }: UserLogin,
     @Req() request: Request,
-  ): Promise<void> {
+  ): Promise<any> {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const { login: tokenLogin, role: tokenRole } = request.user ?? {};
-    //С правами ниже админа, можно менять только себя
-    if (![UserRoles.admin].includes(tokenRole) && tokenLogin !== login) {
-      throw new Error();
+    const { locked, role, ...params } = body;
+    //С правами ниже админа, можно менять только себя, запрещено менять роль и блокировать/разблокировать
+    if (![UserRoles.admin].includes(tokenRole)) {
+      if (tokenLogin !== login) {
+        throw new HttpException(
+          errorMessage.NotEnoughAccessRights,
+          HttpStatus.FORBIDDEN,
+        );
+      }
+      return this.usersService.update(login, params);
     }
-    await this.usersService.update(login, body);
+
+    return this.usersService.update(login, { locked, role, ...params });
   }
 
   @ApiOperation({ summary: 'Удалить пользователя' })
@@ -57,7 +68,13 @@ export class UsersController {
   @Roles([UserRoles.admin])
   @Delete(':login')
   async delete(@Param() { login }: UserLogin): Promise<void> {
-    await this.usersService.delete(login);
+    const count = await this.usersService.delete(login);
+    if (!count) {
+      throw new HttpException(
+        errorMessage.UserNotFound,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
   }
 
   @ApiOperation({ summary: 'Получить список пользователей' })

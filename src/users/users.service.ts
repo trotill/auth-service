@@ -9,11 +9,13 @@ import {
 import { InjectModel } from '@nestjs/sequelize';
 import { UsersModel } from '../db/models/users.model';
 import { Op } from 'sequelize';
+import { SessionsModel } from '../db/models/sessions.model';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectModel(UsersModel) private userRepository: typeof UsersModel,
+    @InjectModel(SessionsModel) private sessionRepository: typeof SessionsModel,
   ) {}
   async getAll(query: GetAllParam): Promise<UserList> {
     const { limit, offset, sort, order, search } = query;
@@ -51,6 +53,7 @@ export class UsersService {
     };
   }
   async delete(login: string) {
+    await this.sessionRepository.destroy({ where: { login } });
     return this.userRepository.destroy({ where: { login } });
   }
   async update(login: string, param: UserUpdate) {

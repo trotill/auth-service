@@ -1,0 +1,16 @@
+version: '3.0'
+
+services:
+  auth_service:
+    container_name: auth_service
+    build:
+      context: .
+    env_file:
+      - .env
+    volumes:
+      - store:/app/store
+    ports:
+      - ${PUBLIC_HTTP_PORT}:${LISTEN_HTTP_PORT}
+    restart: unless-stopped
+volumes:
+  store:

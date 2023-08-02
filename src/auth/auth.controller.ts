@@ -3,6 +3,8 @@ import {
   Controller,
   Get,
   HttpCode,
+  HttpException,
+  HttpStatus,
   Param,
   Post,
   Req,
@@ -13,6 +15,8 @@ import { JWT_Refresh, LoginParams } from './auth.dto';
 import { UserItem, UserLogin } from '../users/users.dto';
 import { AuthService } from './auth.service';
 import { ACCESS_TOKEN_COOKIE_NAME } from '../utils/const';
+import { setCookie } from './auth.utils';
+import { errorMessage } from '../utils/error';
 
 @ApiTags('Авторизация')
 @Controller('auth')
@@ -29,13 +33,7 @@ export class AuthController {
     @Res({ passthrough: true }) response: Response,
   ) {
     const tokens = await this.authService.login(body);
-    if ('cookie' in response) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      response.cookie(ACCESS_TOKEN_COOKIE_NAME, tokens.access, {
-        httpOnly: true,
-      });
-    }
+    setCookie(response, tokens.access);
     return {
       refreshToken: tokens.refresh,
     };
@@ -44,7 +42,11 @@ export class AuthController {
   @ApiResponse({ status: 204 })
   @HttpCode(204)
   @Post('logout/:login')
-  async logout(@Param() { login }: UserLogin): Promise<void> {
+  async logout(
+    @Param() { login }: UserLogin,
+    @Res({ passthrough: true }) response: Response,
+  ): Promise<void> {
+    setCookie(response, '');
     return this.authService.logout(login);
   }
   @ApiOperation({ summary: 'Получить новый access токен' })
@@ -56,13 +58,7 @@ export class AuthController {
     @Res({ passthrough: true }) response: Response,
   ) {
     const tokens = await this.authService.refresh(refreshToken);
-    if ('cookie' in response) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      response.cookie(ACCESS_TOKEN_COOKIE_NAME, tokens.access, {
-        httpOnly: true,
-      });
-    }
+    setCookie(response, tokens.access);
     return {
       refreshToken: tokens.refresh,
     };
@@ -77,6 +73,6 @@ export class AuthController {
       const accessToken = request.cookies[ACCESS_TOKEN_COOKIE_NAME];
       return this.authService.getUserInfoByToken(accessToken);
     }
-    throw new Error();
+    throw new HttpException(errorMessage.BadRequest, HttpStatus.BAD_REQUEST);
   }
 }

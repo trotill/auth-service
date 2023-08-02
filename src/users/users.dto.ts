@@ -7,6 +7,7 @@ import {
   IsString,
 } from 'class-validator';
 import { Transform, TransformFnParams } from 'class-transformer';
+import { IsNumeric } from 'sequelize-typescript';
 
 export const SORT_ORDERS = ['ASC', 'DESC'];
 
@@ -16,30 +17,37 @@ export enum UserRoles {
   guest = 'guest',
 }
 export class UserLogin {
+  @IsString()
+  @IsNotEmpty()
   @ApiProperty({
     example: 'admin',
     description: 'логин',
+    required: true,
   })
-  login: string;
+  readonly login: string;
 }
 export class UserBase extends UserLogin {
+  @IsString()
   @ApiProperty({
     example: 'Иван',
     description: 'имя',
     required: true,
   })
-  firstName: string;
+  readonly firstName: string;
+  @IsString()
   @ApiProperty({
     example: 'Иванов',
     description: 'фамилия',
     required: true,
   })
-  lastName: string;
+  readonly lastName: string;
+  @IsString()
   @ApiProperty({
     example: 'example@gmail.com',
     description: 'Почта',
   })
-  email: string;
+  readonly email: string;
+  @IsString()
   @ApiProperty({
     example: UserRoles.admin,
     description: 'роль',
@@ -49,34 +57,45 @@ export class UserBase extends UserLogin {
   @IsString()
   @IsNotEmpty()
   @IsIn([UserRoles.admin, UserRoles.operator, UserRoles.guest])
-  role: UserRoles;
+  readonly role: UserRoles;
+
   @ApiProperty({
     example: true,
     description: 'Заблокирован - true/ разблокирован - false',
     type: Boolean,
     required: true,
   })
+  @IsNotEmpty()
   @IsBoolean()
-  locked: boolean;
+  readonly locked: boolean;
+
+  @IsString()
+  @IsNotEmpty()
   @ApiProperty({
     example: '384633ad37a18b3b4fc5bf3e371d6e9f',
     description: 'Пароль+логин в md5',
     type: String,
     required: false,
   })
-  password: string;
+  readonly password: string;
+
+  @IsString()
+  @IsNotEmpty()
   @ApiProperty({
     description: 'Время создания',
     type: Date,
     required: false,
   })
-  createdAt: string;
+  readonly createdAt: string;
+
+  @IsString()
+  @IsNotEmpty()
   @ApiProperty({
     description: 'Время обновления',
     type: Date,
     required: false,
   })
-  updatedAt: string;
+  readonly updatedAt: string;
 }
 
 export class UserCreate extends OmitType(UserBase, [
@@ -114,6 +133,7 @@ export class GetAllParam {
     required: true,
   })
   @Transform(({ value }: TransformFnParams): number => +value)
+  @IsNotEmpty()
   limit: number;
 
   @ApiProperty({
@@ -124,6 +144,7 @@ export class GetAllParam {
     minimum: 0,
     required: true,
   })
+  @IsNotEmpty()
   @Transform(({ value }: TransformFnParams): number => +value)
   offset: number;
 
@@ -132,6 +153,7 @@ export class GetAllParam {
     default: 'login',
     required: false,
   })
+  @IsNotEmpty()
   @IsOptional()
   sort: string;
 
@@ -150,6 +172,7 @@ export class GetAllParam {
     example: '',
     required: false,
   })
+  @IsNotEmpty()
   @IsOptional()
   search: string;
 }

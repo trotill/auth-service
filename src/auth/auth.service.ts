@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { LoginParams } from './auth.dto';
 import { UserItem, UserRoles } from '../users/users.dto';
 import { InjectModel } from '@nestjs/sequelize';
@@ -12,6 +12,7 @@ import { SessionsModel } from '../db/models/sessions.model';
 import { verify, sign } from 'jsonwebtoken';
 import { JwtTokenPayload } from './auth.types';
 import jwtKeys from '../utils/keys';
+import { errorMessage } from '../utils/error';
 
 @Injectable()
 export class AuthService {
@@ -88,12 +89,14 @@ export class AuthService {
       }
       return tokens;
     }
-    throw new Error();
+    //Если пароли не совпадают, исключение
+    throw new HttpException(
+      errorMessage.IncorrectLoginPassword,
+      HttpStatus.BAD_REQUEST,
+    );
   }
   async logout(login: string) {
-    //ToDo переделать на каскадное удаление
     await this.sessionRepository.destroy({ where: { login } });
-    await this.userRepository.destroy({ where: { login } });
   }
   verify(token: string, publicKey: string): Promise<JwtTokenPayload> {
     return new Promise((resolve, reject) => {
@@ -117,12 +120,25 @@ export class AuthService {
       });
       return tokens;
     }
-    throw new Error();
+    //Если сессия отсутствует, исключение
+    throw new HttpException(
+      errorMessage.SessionNotFound,
+      HttpStatus.BAD_REQUEST,
+    );
   }
   async getUserInfoByToken(accessToken: string): Promise<UserItem> {
     const { login } = await this.verify(accessToken, this.publicKey);
+
     const { role, locked, createdAt, updatedAt, lastName, firstName, email } =
-      await this.userRepository.findOne({ where: { login }, raw: true });
+      (await this.userRepository.findOne({ where: { login }, raw: true })) ??
+      {};
+    //Если пользователя не существует, исключение
+    if (!role)
+      throw new HttpException(
+        errorMessage.UserNotFound,
+        HttpStatus.BAD_REQUEST,
+      );
+
     return {
       login,
       role: role as UserRoles,

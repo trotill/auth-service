@@ -9,7 +9,14 @@ import jwtKeys from './utils/keys';
 async function bootstrap() {
   await jwtKeys.init();
   const app = await NestFactory.create(AppModule);
-  app.useGlobalPipes(new ValidationPipe({ transform: true }));
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      forbidUnknownValues: true,
+      whitelist: true,
+      forbidNonWhitelisted: true,
+    }),
+  );
   app.use(cookieParser());
   const config = new DocumentBuilder()
     .setTitle('Authority service openApi')
@@ -19,7 +26,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('/api/docs', app, document);
   await writeFile('./swagger/swagger.json', JSON.stringify(document));
-  const port = process.env.HTTP_PORT ?? 7777;
+  const port = process.env.LISTEN_HTTP_PORT ?? 7777;
   await app.listen(port);
   console.log(`listen ${port}`);
 }
