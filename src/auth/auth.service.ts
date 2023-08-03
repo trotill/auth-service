@@ -9,10 +9,11 @@ import {
   REFRESH_TIMEOUT,
 } from '../utils/const';
 import { SessionsModel } from '../db/models/sessions.model';
-import { verify, sign } from 'jsonwebtoken';
+import { sign } from 'jsonwebtoken';
 import { JwtTokenPayload } from './auth.types';
 import jwtKeys from '../utils/keys';
 import { errorMessage } from '../utils/error';
+import { verifyToken } from './auth.utils';
 
 @Injectable()
 export class AuthService {
@@ -103,16 +104,9 @@ export class AuthService {
   async logout(login: string) {
     await this.sessionRepository.destroy({ where: { login } });
   }
-  async verify(token: string, publicKey: string): Promise<JwtTokenPayload> {
-    return new Promise((resolve, reject) => {
-      verify(token, publicKey, (err, decoded) => {
-        if (err) reject(err);
-        resolve(decoded as JwtTokenPayload);
-      });
-    });
-  }
+
   async refresh(refreshToken: string) {
-    const check = await this.verify(refreshToken, this.publicKey).catch(() => {
+    const check = await verifyToken(refreshToken, this.publicKey).catch(() => {
       throw new HttpException(
         errorMessage.RefreshTokenError,
         HttpStatus.BAD_REQUEST,
@@ -148,7 +142,7 @@ export class AuthService {
     );
   }
   async getUserInfoByToken(accessToken: string): Promise<UserItem> {
-    const { login } = await this.verify(accessToken, this.publicKey).catch(
+    const { login } = await verifyToken(accessToken, this.publicKey).catch(
       () => {
         throw new HttpException(
           errorMessage.Unauthorized,

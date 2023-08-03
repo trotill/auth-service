@@ -1,4 +1,6 @@
 import { ACCESS_TOKEN_COOKIE_NAME } from '../utils/const';
+import { JwtTokenPayload } from './auth.types';
+import { verify } from 'jsonwebtoken';
 
 export function setCookie(response: Response, value: string) {
   if ('cookie' in response) {
@@ -8,4 +10,16 @@ export function setCookie(response: Response, value: string) {
       httpOnly: true,
     });
   }
+}
+
+export async function verifyToken(
+  token: string,
+  publicKey: string,
+): Promise<JwtTokenPayload> {
+  return new Promise((resolve, reject) => {
+    verify(token, publicKey, (err, decoded) => {
+      if (err) reject(err);
+      resolve(decoded as JwtTokenPayload);
+    });
+  });
 }
