@@ -2,12 +2,12 @@ import { Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { SequelizeModule } from '@nestjs/sequelize';
-import { UsersModel } from '../db/models/users.model';
-import { SessionsModel } from '../db/models/sessions.model';
+import { UsersModel } from 'src/db/models/users.model';
+import { SessionsModel } from 'src/db/models/sessions.model';
 import { JwtModule } from '@nestjs/jwt';
-import { JwtStrategy } from './jwt.strategy';
+import { JwtStrategy } from 'src/jwt/jwt.strategy';
 import { ACCESS_TIMEOUT } from '../utils/const';
-import jwtKeys from '../utils/keys';
+import jwtKeys from 'src/utils/keys';
 
 @Module({
   imports: [

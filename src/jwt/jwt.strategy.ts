@@ -2,12 +2,12 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 
-import { ACCESS_TOKEN_COOKIE_NAME } from '../utils/const';
-import jwtKeys from '../utils/keys';
+import { ACCESS_TOKEN_COOKIE_NAME } from 'src/utils/const';
+import jwtKeys from 'src/utils/keys';
 import { InjectModel } from '@nestjs/sequelize';
-import { UsersModel } from '../db/models/users.model';
-import { SessionsModel } from '../db/models/sessions.model';
-import { errorMessage } from '../utils/error';
+import { UsersModel } from 'src/db/models/users.model';
+import { SessionsModel } from 'src/db/models/sessions.model';
+import { errorMessage } from 'src/utils/error';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
