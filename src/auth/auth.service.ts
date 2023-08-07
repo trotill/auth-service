@@ -129,11 +129,17 @@ export class AuthService {
       where: { refreshToken, login: check.login, sessionId: check.sessionId },
     });
     if (session) {
-      return this.regenJwtPairByLogin({
-        login: session.login,
+      const { login, sessionId } = session;
+      const pair = await this.regenJwtPairByLogin({
+        login,
         role: check.role,
-        sessionId: session.sessionId,
+        sessionId,
       });
+      await this.sessionRepository.update(
+        { refreshToken: pair.refresh },
+        { where: { login, sessionId } },
+      );
+      return pair;
     }
     //Если сессия отсутствует, исключение
     throw new HttpException(
