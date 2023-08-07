@@ -1,13 +1,14 @@
 import { ApiProperty, OmitType, PartialType } from '@nestjs/swagger';
 import {
-  IsBoolean,
   IsIn,
   IsNotEmpty,
+  IsNumber,
   IsOptional,
   IsString,
+  Max,
+  Min,
 } from 'class-validator';
 import { Transform, TransformFnParams } from 'class-transformer';
-import { IsNumeric } from 'sequelize-typescript';
 
 export const SORT_ORDERS = ['ASC', 'DESC'];
 
@@ -60,14 +61,16 @@ export class UserBase extends UserLogin {
   readonly role: UserRoles;
 
   @ApiProperty({
-    example: true,
-    description: 'Заблокирован - true/ разблокирован - false',
-    type: Boolean,
+    example: 0,
+    description: 'Заблокирован - 1/ разблокирован - 0',
+    type: Number,
     required: true,
   })
   @IsNotEmpty()
-  @IsBoolean()
-  readonly locked: boolean;
+  @IsNumber()
+  @Min(0)
+  @Max(1)
+  readonly locked: number;
 
   @IsString()
   @IsNotEmpty()
@@ -98,10 +101,12 @@ export class UserBase extends UserLogin {
   readonly updatedAt: string;
 }
 
-export class UserCreate extends OmitType(UserBase, [
-  'updatedAt',
-  'createdAt',
-]) {}
+export class UserCreate extends OmitType(UserBase, ['updatedAt', 'createdAt']) {
+  @ApiProperty({
+    required: true,
+  })
+  readonly password: string;
+}
 export class UserUpdate extends PartialType(
   OmitType(UserCreate, ['login'] as const),
 ) {}

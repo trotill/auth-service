@@ -39,9 +39,9 @@ export class UsersModel extends Model<UsersModel, UserBase> {
   })
   email: string;
   @Column({
-    type: DataType.STRING,
+    type: DataType.NUMBER,
     allowNull: false,
-    defaultValue: false,
+    defaultValue: 1,
   })
-  locked: boolean;
+  locked: number;
 }

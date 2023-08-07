@@ -23,8 +23,8 @@ module.exports = {
         type: Sequelize.STRING
       },
       locked:{
-        type: Sequelize.BOOLEAN,
-        defaultValue:false
+        type: Sequelize.NUMERIC,
+        defaultValue:0
       },
       createdAt: {
         allowNull: false,
