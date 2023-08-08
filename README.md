@@ -1,73 +1,55 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+## О сервисе
+Сервис авторизации предназначен для использования в embedded и легких серверных системах.
+Сервис обеспечивает JWT авторизацию и управление пользователями, имеет возможность легкой интеграции
+с бэкендом на nestjs
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Зависимости
+1. nodejs 18.14.0
+2. yarn
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Установка/настройка сервиса
+1. Скопируйте .env.example в .env
+   В .env скорректируйте переменные (см. ниже описание)
+2. yarn install
+3. публичный и приватный ключи, БД генерируются автоматически при старте
+4. перед первым запуском в режиме разработки нужно сделать миграции и сиды (в прод режиме, этого делать не нужно)
+   - yarn migrate
+   - yarn seed
 
-## Description
+## Запуск в режиме прода
+yarn start
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Запуск в режиме разработки
 
-## Installation
+yarn start:dev
 
-```bash
-$ yarn install
-```
+## Запуск в docker контейнере
+1. запуск yarn docker:up
+2. останов yarn docker:down
 
-## Running the app
+## Опции .env файла
+### Порт веб сервера
+LISTEN_HTTP_PORT=4499
+### Путь к папке для ключей и БД
+STORE_PATH=store
 
-```bash
-# development
-$ yarn run start
+### Имя файла БД
+DB_PATH=auth.db
 
-# watch mode
-$ yarn run start:dev
+### Имя БД
+DB_NAME=database_development
 
-# production mode
-$ yarn run start:prod
-```
+### Пользователь БД
+DB_USER=develinux
 
-## Test
+### Пароль к БД
+DB_PASSWORD=cnfhjcnm
 
-```bash
-# unit tests
-$ yarn run test
+### Время жизни access токена
+ACCESS_TIMEOUT="60s"
 
-# e2e tests
-$ yarn run test:e2e
+### Время жизни refresh токена
+REFRESH_TIMEOUT="90d"
 
-# test coverage
-$ yarn run test:cov
-```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+### Порт сервиса из docker (проксирование на LISTEN_HTTP_PORT в докере). Используется только при запуске в докер контейнере.
+PUBLIC_HTTP_PORT=7777
