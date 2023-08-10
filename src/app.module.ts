@@ -3,8 +3,6 @@ ConfigModule.forRoot({
   envFilePath: `.env`,
 });
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { SequelizeModule } from '@nestjs/sequelize';
@@ -22,9 +20,7 @@ const models = [UsersModel, SessionsModel];
     AuthModule,
     SequelizeModule.forRoot({ ...sequelizeConfig['development'], models }),
   ],
-  controllers: [AppController],
   providers: [
-    AppService,
     { provide: APP_GUARD, useClass: JwtGlobalGuard },
     {
       provide: APP_GUARD,

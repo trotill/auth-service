@@ -1,6 +1,6 @@
 import { ApiProperty, IntersectionType } from '@nestjs/swagger';
-import { UserLogin } from '../users/users.dto';
-import { DEFAULT_SESSION_ID } from '../utils/const';
+import { UserLogin } from 'src/users/users.dto';
+import { DEFAULT_SESSION_ID } from 'src/utils/const';
 import { IsNotEmpty, IsString } from 'class-validator';
 
 export class SessionId {

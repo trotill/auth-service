@@ -6,3 +6,8 @@ export interface JwtTokenPayload {
   iat: number;
   exp: number;
 }
+
+export interface JwtPair {
+  access: string;
+  refresh: string;
+}

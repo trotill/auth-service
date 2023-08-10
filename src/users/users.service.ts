@@ -7,9 +7,9 @@ import {
   UserUpdate,
 } from './users.dto';
 import { InjectModel } from '@nestjs/sequelize';
-import { UsersModel } from '../db/models/users.model';
+import { UsersModel } from 'src/db/models/users.model';
 import { Op } from 'sequelize';
-import { SessionsModel } from '../db/models/sessions.model';
+import { SessionsModel } from 'src/db/models/sessions.model';
 
 @Injectable()
 export class UsersService {
@@ -52,14 +52,14 @@ export class UsersService {
       count: data.count,
     };
   }
-  async delete(login: string) {
+  async delete(login: string): Promise<number> {
     await this.sessionRepository.destroy({ where: { login } });
     return this.userRepository.destroy({ where: { login } });
   }
-  async update(login: string, param: UserUpdate) {
+  async update(login: string, param: UserUpdate): Promise<[number]> {
     return this.userRepository.update(param, { where: { login } });
   }
-  async create(param: UserCreate) {
+  async create(param: UserCreate): Promise<UsersModel> {
     return this.userRepository.create(param);
   }
 }

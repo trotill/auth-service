@@ -6,7 +6,7 @@ import * as process from 'process';
 import { ValidationPipe } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
 import jwtKeys from './utils/keys';
-async function bootstrap() {
+async function bootstrap(): Promise<void> {
   await jwtKeys.init();
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(

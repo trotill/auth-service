@@ -12,11 +12,11 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JWT_Refresh, LoginParams } from './auth.dto';
-import { UserItem, UserLogin } from '../users/users.dto';
+import { UserItem, UserLogin } from 'src/users/users.dto';
 import { AuthService } from './auth.service';
-import { ACCESS_TOKEN_COOKIE_NAME } from '../utils/const';
+import { ACCESS_TOKEN_COOKIE_NAME } from 'src/utils/const';
 import { setCookie } from './auth.utils';
-import { errorMessage } from '../utils/error';
+import { errorMessage } from 'src/utils/error';
 
 @ApiTags('Авторизация')
 @Controller('auth')
@@ -31,7 +31,7 @@ export class AuthController {
   async login(
     @Body() body: LoginParams,
     @Res({ passthrough: true }) response: Response,
-  ) {
+  ): Promise<JWT_Refresh> {
     const tokens = await this.authService.login(body);
     setCookie(response, tokens.access);
     return {
@@ -45,7 +45,7 @@ export class AuthController {
   async logout(
     @Param() { login }: UserLogin,
     @Res({ passthrough: true }) response: Response,
-  ): Promise<void> {
+  ): Promise<number> {
     setCookie(response, '');
     return this.authService.logout(login);
   }
@@ -56,7 +56,7 @@ export class AuthController {
   async refresh(
     @Body() { refreshToken }: JWT_Refresh,
     @Res({ passthrough: true }) response: Response,
-  ) {
+  ): Promise<JWT_Refresh> {
     const tokens = await this.authService.refresh(refreshToken);
     setCookie(response, tokens.access);
     return {

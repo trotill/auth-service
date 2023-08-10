@@ -1,19 +1,19 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { LoginParams } from './auth.dto';
-import { UserItem, UserRoles } from '../users/users.dto';
+import { UserItem, UserRoles } from 'src/users/users.dto';
 import { InjectModel } from '@nestjs/sequelize';
-import { UsersModel } from '../db/models/users.model';
+import { UsersModel } from 'src/db/models/users.model';
 import {
   ACCESS_TIMEOUT,
   DEFAULT_SESSION_ID,
   REFRESH_TIMEOUT,
-} from '../utils/const';
-import { SessionsModel } from '../db/models/sessions.model';
+} from 'src/utils/const';
+import { SessionsModel } from 'src/db/models/sessions.model';
 import { sign } from 'jsonwebtoken';
-import { JwtTokenPayload } from './auth.types';
-import jwtKeys from '../utils/keys';
-import { errorMessage } from '../utils/error';
+import jwtKeys from 'src/utils/keys';
+import { errorMessage } from 'src/utils/error';
 import { verifyToken } from './auth.utils';
+import type { JwtPair } from './auth.types';
 
 @Injectable()
 export class AuthService {
@@ -27,7 +27,7 @@ export class AuthService {
     this.privateKey = privateKey;
     this.publicKey = publicKey;
   }
-  async regenJwtPairByLogin({
+  regenJwtPairByLogin({
     login,
     role = UserRoles.guest,
     sessionId = DEFAULT_SESSION_ID,
@@ -35,7 +35,7 @@ export class AuthService {
     login: string;
     role: string;
     sessionId: string;
-  }) {
+  }): JwtPair {
     const accessToken = sign(
       { login, role, sessionId, type: 'access' },
       this.privateKey,
@@ -51,19 +51,11 @@ export class AuthService {
       refresh: refreshToken,
     };
   }
-  async login(params: LoginParams) {
+  async login(params: LoginParams): Promise<JwtPair> {
     const { login, password, sessionId = DEFAULT_SESSION_ID } = params;
-    //ToDo разобраться с отношениями, делать один запрос вместо 2х
     const user = await this.userRepository.findOne({
       raw: true,
       where: { login },
-      /*  include: {
-        model: SessionsModel,
-        attributes: [],
-        where: {
-          sessionId,
-        },
-      },*/
     });
     if (!user)
       throw new HttpException(errorMessage.UserNotFound, HttpStatus.FORBIDDEN);
@@ -76,7 +68,7 @@ export class AuthService {
         where: { login, sessionId },
       })) ?? {};
     if (user.password === password) {
-      const tokens = await this.regenJwtPairByLogin({
+      const tokens = this.regenJwtPairByLogin({
         login,
         role: user.role as string,
         sessionId,
@@ -101,11 +93,11 @@ export class AuthService {
       HttpStatus.BAD_REQUEST,
     );
   }
-  async logout(login: string) {
-    await this.sessionRepository.destroy({ where: { login } });
+  async logout(login: string): Promise<number> {
+    return this.sessionRepository.destroy({ where: { login } });
   }
 
-  async refresh(refreshToken: string) {
+  async refresh(refreshToken: string): Promise<JwtPair> {
     const check = await verifyToken(refreshToken, this.publicKey).catch(() => {
       throw new HttpException(
         errorMessage.RefreshTokenError,
@@ -130,7 +122,7 @@ export class AuthService {
     });
     if (session) {
       const { login, sessionId } = session;
-      const pair = await this.regenJwtPairByLogin({
+      const pair = this.regenJwtPairByLogin({
         login,
         role: check.role,
         sessionId,

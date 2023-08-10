@@ -63,7 +63,8 @@ export class UserBase extends UserLogin {
   @ApiProperty({
     example: 0,
     description: 'Заблокирован - 1/ разблокирован - 0',
-    type: Number,
+    type: 'integer',
+    format: 'int32',
     required: true,
   })
   @IsNotEmpty()
@@ -123,7 +124,8 @@ export class UserList {
   @ApiProperty({
     example: 0,
     description: 'Всего пользователей соответсвуют фильтру',
-    type: Number,
+    type: 'integer',
+    format: 'int32',
   })
   count: number;
 }
@@ -133,7 +135,8 @@ export class GetAllParam {
     example: 200000,
     default: 200000,
     description: 'Лимит',
-    type: Number,
+    type: 'integer',
+    format: 'int32',
     minimum: 1,
     required: true,
   })
@@ -145,7 +148,8 @@ export class GetAllParam {
     example: 0,
     default: 0,
     description: 'Смещение',
-    type: Number,
+    type: 'integer',
+    format: 'int32',
     minimum: 0,
     required: true,
   })

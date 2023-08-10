@@ -24,6 +24,7 @@ import {
 import { UsersService } from './users.service';
 import { Roles } from '../guard/roles.decorator';
 import { errorMessage } from '../utils/error';
+import type { RequestWU } from './user.types';
 
 @ApiTags('Управление пользователями')
 @Controller('users')
@@ -43,24 +44,21 @@ export class UsersController {
   async update(
     @Body() body: UserUpdate,
     @Param() { login }: UserLogin,
-    @Req() request: Request,
-  ): Promise<any> {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
+    @Req() request: RequestWU,
+  ): Promise<[number]> {
     const { login: tokenLogin, role: tokenRole } = request.user ?? {};
     const { locked, role, ...params } = body;
     //С правами ниже админа, можно менять только себя, запрещено менять роль и блокировать/разблокировать
-    if (![UserRoles.admin].includes(tokenRole)) {
-      if (tokenLogin !== login) {
-        throw new HttpException(
-          errorMessage.NotEnoughAccessRights,
-          HttpStatus.FORBIDDEN,
-        );
-      }
-      return this.usersService.update(login, params);
+    if ([UserRoles.admin].includes(tokenRole as UserRoles)) {
+      return this.usersService.update(login, { locked, role, ...params });
     }
-
-    return this.usersService.update(login, { locked, role, ...params });
+    if (tokenLogin !== login) {
+      throw new HttpException(
+        errorMessage.NotEnoughAccessRights,
+        HttpStatus.FORBIDDEN,
+      );
+    }
+    return this.usersService.update(login, params);
   }
 
   @ApiOperation({ summary: 'Удалить пользователя' })

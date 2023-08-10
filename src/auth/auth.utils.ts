@@ -1,5 +1,5 @@
-import { ACCESS_TOKEN_COOKIE_NAME } from '../utils/const';
-import { JwtTokenPayload } from './auth.types';
+import { ACCESS_TOKEN_COOKIE_NAME } from 'src/utils/const';
+import type { JwtTokenPayload } from './auth.types';
 import { verify } from 'jsonwebtoken';
 
 export function setCookie(response: Response, value: string) {

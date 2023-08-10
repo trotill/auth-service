@@ -1,6 +1,6 @@
 import { Column, DataType, Model, Table } from 'sequelize-typescript';
-import { AuthSessions } from '../../auth/auth.dto';
-import { DEFAULT_SESSION_ID } from '../../utils/const';
+import { AuthSessions } from 'src/auth/auth.dto';
+import { DEFAULT_SESSION_ID } from 'src/utils/const';
 
 @Table({ tableName: 'sessions' })
 export class SessionsModel extends Model<SessionsModel, AuthSessions> {

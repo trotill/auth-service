@@ -6,7 +6,7 @@ import { UsersModel } from 'src/db/models/users.model';
 import { SessionsModel } from 'src/db/models/sessions.model';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from 'src/jwt/jwt.strategy';
-import { ACCESS_TIMEOUT } from '../utils/const';
+import { ACCESS_TIMEOUT } from 'src/utils/const';
 import jwtKeys from 'src/utils/keys';
 
 @Module({
