@@ -5,6 +5,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { UsersModel } from 'src/db/models/users.model';
 import {
   ACCESS_TIMEOUT,
+  CHECK_SESSION_TOKEN_INTERVAL,
   DEFAULT_SESSION_ID,
   REFRESH_TIMEOUT,
 } from 'src/utils/const';
@@ -14,6 +15,8 @@ import jwtKeys from 'src/utils/keys';
 import { errorMessage } from 'src/utils/error';
 import { verifyToken } from './auth.utils';
 import type { JwtPair } from './auth.types';
+import { SessionStat } from './auth.types';
+import { getPasswordHash } from '../utils/secure';
 
 @Injectable()
 export class AuthService {
@@ -26,6 +29,36 @@ export class AuthService {
     const { privateKey, publicKey } = jwtKeys.keys;
     this.privateKey = privateKey;
     this.publicKey = publicKey;
+    setInterval(() => {
+      this.checkSessionsToken()
+        .then(({ total, totalRemoved }: SessionStat) => {
+          console.log(
+            `sessions token checked ${total}, removed ${totalRemoved}`,
+          );
+        })
+        .catch((e) => {
+          console.log('catch error in checkSessionsToken', e);
+        });
+    }, CHECK_SESSION_TOKEN_INTERVAL * 1000);
+  }
+  async checkSessionsToken(): Promise<SessionStat> {
+    const sessions = await this.sessionRepository.findAll({});
+    let totalRemoved = 0;
+    for (const { id, refreshToken, login } of sessions) {
+      if (
+        !(await verifyToken(refreshToken, this.publicKey).catch(() => null))
+      ) {
+        await this.sessionRepository.destroy({ where: { id } });
+        totalRemoved++;
+        console.log(
+          `remove user [${login}] session id [${id}] with invalid refresh token`,
+        );
+      }
+    }
+    return {
+      totalRemoved,
+      total: sessions.length,
+    };
   }
   regenJwtPairByLogin({
     login,
@@ -67,7 +100,7 @@ export class AuthService {
         raw: true,
         where: { login, sessionId },
       })) ?? {};
-    if (user.password === password) {
+    if (user.password === getPasswordHash(password)) {
       const tokens = this.regenJwtPairByLogin({
         login,
         role: user.role as string,

@@ -30,3 +30,7 @@ export const getKeyPairs = async (): Promise<{
     privateKey: readFileSync(`${KEY_PATH}/private.key`).toString(),
   };
 };
+
+export function getPasswordHash(password: string): string {
+  return crypto.createHash('sha256').update(password).digest('base64');
+}
