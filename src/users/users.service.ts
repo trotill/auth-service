@@ -10,7 +10,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { UsersModel } from 'src/db/models/users.model';
 import { Op } from 'sequelize';
 import { SessionsModel } from 'src/db/models/sessions.model';
-import { getPasswordHash } from '../utils/secure';
+import { getPasswordHash } from 'src/utils/jsutils.cjs';
 
 @Injectable()
 export class UsersService {

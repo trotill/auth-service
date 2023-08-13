@@ -1,24 +1,21 @@
 'use strict';
-const crypto = require('crypto');
+const {getPasswordHash} = require("../../utils/jsutils.cjs");
 const login="admin"
 const password="admin"
 
-function getPasswordHash(password) {
-    return crypto.createHash('sha256').update(password).digest('base64');
-}
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     // for browser use jshashes library
-    // const passwd=new jshashes.SHA1().b64(login + password)
-    const passwd =crypto.createHash('sha1').update(login + password).digest('base64')
-    // 3ZRwlSi7HIPQjzCI1AQ/R0KJH08= for test
+    // const saltedHashedPassword=new jshashes.SHA256().b64(login + password)
+    const saltedHashedPassword = getPasswordHash(login + password)
+    // 2CSU8F1pF7oC96qilonMtES7c/IDgIdssF0fN1N7eJI= for test
     try {
        await queryInterface.bulkInsert('users', [{
         login: 'admin',
         role: 'admin',
         firstName: 'firstName',
-        password: getPasswordHash(passwd),
+        password: getPasswordHash(saltedHashedPassword),
         lastName: 'lastName',
         email: 'email',
         createdAt: new Date(),

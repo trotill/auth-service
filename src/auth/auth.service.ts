@@ -16,7 +16,7 @@ import { errorMessage } from 'src/utils/error';
 import { verifyToken } from './auth.utils';
 import type { JwtPair } from './auth.types';
 import { SessionStat } from './auth.types';
-import { getPasswordHash } from '../utils/secure';
+import { getPasswordHash } from 'src/utils/jsutils.cjs';
 
 @Injectable()
 export class AuthService {
