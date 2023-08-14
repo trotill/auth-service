@@ -6,6 +6,7 @@ import * as process from 'process';
 import { ValidationPipe } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
 import jwtKeys from './utils/keys';
+import { SAVE_SWAGGER } from './utils/const';
 async function bootstrap(): Promise<void> {
   await jwtKeys.init();
   const app = await NestFactory.create(AppModule);
@@ -25,7 +26,8 @@ async function bootstrap(): Promise<void> {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('/api/docs', app, document);
-  await writeFile('./swagger/swagger.json', JSON.stringify(document));
+  if (+SAVE_SWAGGER)
+    await writeFile('./swagger/swagger.json', JSON.stringify(document));
   const port = process.env.LISTEN_HTTP_PORT ?? 7777;
   await app.listen(port);
   console.log(`listen ${port}`);

@@ -46,10 +46,13 @@ DB_USER=develinux
 DB_PASSWORD=cnfhjcnm
 
 ### Время жизни access токена
-ACCESS_TIMEOUT="60s"
+ACCESS_TIMEOUT=60s
 
 ### Время жизни refresh токена
-REFRESH_TIMEOUT="90d"
+REFRESH_TIMEOUT=90d
 
 ### Порт сервиса из docker (проксирование на LISTEN_HTTP_PORT в докере). Используется только при запуске в докер контейнере.
 PUBLIC_HTTP_PORT=7777
+
+### Сохранять сваггер файл при запуске в папке swagger
+SAVE_SWAGGER=1

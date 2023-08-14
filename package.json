@@ -7,6 +7,8 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "nest build",
+    "build:pack": "yarn build --path='tsconfig.pack.json'&&cp .env.example package.json pack/&&cp node_modules/ pack/ -R&&cp src/db/config src/db/migrations src/db/seeders pack -R",
+    "start:pack": "yarn migrate&&yarn seed&&node dist/main",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start:dev": "nest start --watch",
     "start": "yarn build&&yarn migrate&&yarn seed&&node dist/main",
