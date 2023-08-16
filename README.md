@@ -5,27 +5,29 @@
 
 ## Зависимости
 1. nodejs 18.14.0
-2. yarn
+2. node-gyp
+3. npm
+4. sqlite3
 
 ## Установка/настройка сервиса
 1. Скопируйте .env.example в .env
    В .env скорректируйте переменные (см. ниже описание)
-2. yarn install
+2. npm install
 3. публичный и приватный ключи, БД генерируются автоматически при старте
 4. перед первым запуском в режиме разработки нужно сделать миграции и сиды (в прод режиме, этого делать не нужно)
-   - yarn migrate
-   - yarn seed
+   - npm run migrate
+   - npm run seed
 
 ## Запуск в режиме прода
-yarn start
+npm run start
 
 ## Запуск в режиме разработки
 
-yarn start:dev
+npm run start:dev
 
 ## Запуск в docker контейнере
-1. запуск yarn docker:up
-2. останов yarn docker:down
+1. запуск npm run docker:up
+2. останов npm run docker:down
 
 ## Опции .env файла
 ### Порт веб сервера
