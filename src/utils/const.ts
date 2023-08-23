@@ -8,3 +8,4 @@ export const {
 } = process.env;
 export const DEFAULT_SESSION_ID = '-';
 export const ACCESS_TOKEN_COOKIE_NAME = 'access';
+export const CHECK_SESSION_TOKEN_INTERVAL = 86400;

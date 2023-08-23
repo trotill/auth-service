@@ -10,6 +10,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { UsersModel } from 'src/db/models/users.model';
 import { Op } from 'sequelize';
 import { SessionsModel } from 'src/db/models/sessions.model';
+import { getPasswordHash } from 'src/utils/jsutils.cjs';
 
 @Injectable()
 export class UsersService {
@@ -56,10 +57,22 @@ export class UsersService {
     await this.sessionRepository.destroy({ where: { login } });
     return this.userRepository.destroy({ where: { login } });
   }
-  async update(login: string, param: UserUpdate): Promise<[number]> {
-    return this.userRepository.update(param, { where: { login } });
+  async update(
+    login: string,
+    { password, ...param }: UserUpdate,
+  ): Promise<[number]> {
+    return this.userRepository.update(
+      {
+        ...param,
+        password: password ? getPasswordHash(password) : undefined,
+      },
+      { where: { login } },
+    );
   }
-  async create(param: UserCreate): Promise<UsersModel> {
-    return this.userRepository.create(param);
+  async create({ password, ...param }: UserCreate): Promise<UsersModel> {
+    return this.userRepository.create({
+      ...param,
+      password: getPasswordHash(password),
+    });
   }
 }

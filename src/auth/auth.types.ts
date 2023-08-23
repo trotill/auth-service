@@ -11,3 +11,8 @@ export interface JwtPair {
   access: string;
   refresh: string;
 }
+
+export interface SessionStat {
+  totalRemoved: number;
+  total: number;
+}
