@@ -46,8 +46,10 @@ export class UsersService {
       where,
       limit,
       offset,
+      attributes: { exclude: ['password'] },
       order: sort && order ? [[sort, order]] : undefined,
     });
+
     return {
       items: data.rows as UserItem[],
       count: data.count,
