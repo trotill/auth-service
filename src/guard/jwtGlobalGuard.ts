@@ -11,14 +11,18 @@ export class JwtGlobalGuard extends AuthGuard('jwt') {
   async canActivate(context: ExecutionContext) {
     const { url, cookies } = context.getArgs()[0];
     if ('args' in context) {
-      if (url === '/auth/login') return true;
-      if (url === '/auth/refresh') {
-        const access = cookies[ACCESS_TOKEN_COOKIE_NAME];
-        return !!(await verifyToken(access, jwtKeys.keys.publicKey).catch(
-          (err) => {
-            return err.name === 'TokenExpiredError';
-          },
-        ));
+      switch (url) {
+        case '/auth/login':
+        case '/users/register':
+          return true;
+        case '/auth/refresh': {
+          const access = cookies[ACCESS_TOKEN_COOKIE_NAME];
+          return !!(await verifyToken(access, jwtKeys.keys.publicKey).catch(
+            (err) => {
+              return err.name === 'TokenExpiredError';
+            },
+          ));
+        }
       }
     }
     return super.canActivate(context);

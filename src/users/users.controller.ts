@@ -15,6 +15,7 @@ import {
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import {
   GetAllParam,
+  RegisterUser,
   UserCreate,
   UserList,
   UserLogin,
@@ -25,6 +26,7 @@ import { UsersService } from './users.service';
 import { Roles } from '../guard/roles.decorator';
 import { errorMessage } from '../utils/error';
 import type { RequestWU } from './user.types';
+import { ALLOW_USER_REGISTRATION } from '../utils/const';
 
 @ApiTags('Управление пользователями')
 @Controller('users')
@@ -80,5 +82,19 @@ export class UsersController {
   @Get()
   async getAll(@Query() query: GetAllParam): Promise<UserList> {
     return this.usersService.getAll(query);
+  }
+
+  @ApiOperation({ summary: 'Зарегистрировать нового пользователя' })
+  @ApiResponse({ status: 204 })
+  @HttpCode(204)
+  @Post('register')
+  async register(@Body() body: RegisterUser): Promise<void> {
+    if (!+ALLOW_USER_REGISTRATION) {
+      throw new HttpException(
+        errorMessage.NotAcceptable,
+        HttpStatus.NOT_ACCEPTABLE,
+      );
+    }
+    await this.usersService.register(body);
   }
 }

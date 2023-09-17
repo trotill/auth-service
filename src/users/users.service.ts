@@ -1,9 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import {
   GetAllParam,
+  RegisterUser,
   UserCreate,
   UserItem,
   UserList,
+  UserRoles,
   UserUpdate,
 } from './users.dto';
 import { InjectModel } from '@nestjs/sequelize';
@@ -11,6 +13,7 @@ import { UsersModel } from 'src/db/models/users.model';
 import { Op } from 'sequelize';
 import { SessionsModel } from 'src/db/models/sessions.model';
 import { getPasswordHash } from 'src/utils/jsutils.cjs';
+import { errorMessage } from '../utils/error';
 
 @Injectable()
 export class UsersService {
@@ -76,5 +79,19 @@ export class UsersService {
       ...param,
       password: getPasswordHash(password),
     });
+  }
+  async register(registerParams: RegisterUser) {
+    const { login } =
+      (await this.userRepository.findOne({
+        where: { login: registerParams.login },
+        raw: true,
+      })) ?? {};
+    if (login === registerParams.login) {
+      throw new HttpException(
+        errorMessage.NotAcceptable,
+        HttpStatus.NOT_ACCEPTABLE,
+      );
+    }
+    return this.create({ ...registerParams, locked: 1, role: UserRoles.guest });
   }
 }

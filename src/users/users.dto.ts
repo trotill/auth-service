@@ -185,3 +185,5 @@ export class GetAllParam {
   @IsOptional()
   search: string;
 }
+
+export class RegisterUser extends OmitType(UserCreate, ['locked', 'role']) {}

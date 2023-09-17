@@ -5,6 +5,7 @@ export const {
   ACCESS_TIMEOUT = '60s',
   REFRESH_TIMEOUT = '90d',
   SAVE_SWAGGER = '0',
+  ALLOW_USER_REGISTRATION = '0',
 } = process.env;
 export const DEFAULT_SESSION_ID = '-';
 export const ACCESS_TOKEN_COOKIE_NAME = 'access';

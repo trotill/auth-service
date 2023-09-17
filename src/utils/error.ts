@@ -5,6 +5,7 @@ export enum errorMessage {
   UserNotFound = 'UserNotFound',
   NotEnoughAccessRights = 'NotEnoughAccessRights',
   Unauthorized = 'Unauthorized',
+  NotAcceptable = 'NotAcceptable',
   UserLocked = 'UserLocked',
   RefreshTokenError = 'RefreshTokenError',
 }
