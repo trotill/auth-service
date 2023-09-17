@@ -11,6 +11,7 @@ import {
   Req,
   HttpException,
   HttpStatus,
+  ForbiddenException,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import {
@@ -26,7 +27,7 @@ import { UsersService } from './users.service';
 import { Roles } from '../guard/roles.decorator';
 import { errorMessage } from '../utils/error';
 import type { RequestWU } from './user.types';
-import { ALLOW_USER_REGISTRATION } from '../utils/const';
+import { ALLOW_USER_REGISTRATION, DENY_GET_USER_LIST } from '../utils/const';
 
 @ApiTags('Управление пользователями')
 @Controller('users')
@@ -80,7 +81,13 @@ export class UsersController {
   @ApiOperation({ summary: 'Получить список пользователей' })
   @ApiResponse({ status: 200, type: UserList })
   @Get()
-  async getAll(@Query() query: GetAllParam): Promise<UserList> {
+  async getAll(
+    @Query() query: GetAllParam,
+    @Req() request: RequestWU,
+  ): Promise<UserList> {
+    if (+DENY_GET_USER_LIST && request.user.role !== UserRoles.admin) {
+      throw new ForbiddenException();
+    }
     return this.usersService.getAll(query);
   }
 

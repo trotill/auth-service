@@ -6,6 +6,7 @@ export const {
   REFRESH_TIMEOUT = '90d',
   SAVE_SWAGGER = '0',
   ALLOW_USER_REGISTRATION = '0',
+  DENY_GET_USER_LIST = '0',
 } = process.env;
 export const DEFAULT_SESSION_ID = '-';
 export const ACCESS_TOKEN_COOKIE_NAME = 'access';
