@@ -7,6 +7,7 @@ export const {
   SAVE_SWAGGER = '0',
   ALLOW_USER_REGISTRATION = '0',
   DENY_GET_USER_LIST = '0',
+  BRUTE_FORCE_LOGIN_DELAY = '2000',
 } = process.env;
 export const DEFAULT_SESSION_ID = '-';
 export const ACCESS_TOKEN_COOKIE_NAME = 'access';

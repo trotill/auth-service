@@ -14,9 +14,13 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JWT_Refresh, LoginParams } from './auth.dto';
 import { UserItem, UserLogin } from 'src/users/users.dto';
 import { AuthService } from './auth.service';
-import { ACCESS_TOKEN_COOKIE_NAME } from 'src/utils/const';
+import {
+  ACCESS_TOKEN_COOKIE_NAME,
+  BRUTE_FORCE_LOGIN_DELAY,
+} from 'src/utils/const';
 import { setCookie } from './auth.utils';
 import { errorMessage } from 'src/utils/error';
+import { delay } from 'src/utils/time';
 
 @ApiTags('Авторизация')
 @Controller('auth')
@@ -32,11 +36,16 @@ export class AuthController {
     @Body() body: LoginParams,
     @Res({ passthrough: true }) response: Response,
   ): Promise<JWT_Refresh> {
-    const tokens = await this.authService.login(body);
-    setCookie(response, tokens.access);
-    return {
-      refreshToken: tokens.refresh,
-    };
+    try {
+      const tokens = await this.authService.login(body);
+      setCookie(response, tokens.access);
+      return {
+        refreshToken: tokens.refresh,
+      };
+    } catch (e) {
+      await delay(+BRUTE_FORCE_LOGIN_DELAY); //brute force protect
+      throw e;
+    }
   }
   @ApiOperation({ summary: 'Разлогиниться' })
   @ApiResponse({ status: 204 })
