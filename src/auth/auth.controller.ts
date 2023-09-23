@@ -17,15 +17,26 @@ import { AuthService } from './auth.service';
 import {
   ACCESS_TOKEN_COOKIE_NAME,
   BRUTE_FORCE_LOGIN_DELAY,
+  BRUTE_FORCE_LOGIN_LIMIT,
+  BRUTE_FORCE_LOGIN_TTL,
+  BRUTE_FORCE_WHOAMI_LIMIT,
+  BRUTE_FORCE_WHOAMI_TTL,
 } from 'src/utils/const';
 import { setCookie } from './auth.utils';
 import { errorMessage } from 'src/utils/error';
 import { delay } from 'src/utils/time';
-
+import { Throttle } from '@nestjs/throttler';
+let counter = 0;
 @ApiTags('Авторизация')
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
+  @Throttle({
+    default: {
+      limit: +BRUTE_FORCE_LOGIN_LIMIT,
+      ttl: +BRUTE_FORCE_LOGIN_TTL,
+    },
+  })
   @ApiOperation({
     summary: 'Залогиниться (access токен устанавливается в сервер куку!!!)',
   })
@@ -37,6 +48,8 @@ export class AuthController {
     @Res({ passthrough: true }) response: Response,
   ): Promise<JWT_Refresh> {
     try {
+      console.log('counter', ++counter);
+
       const tokens = await this.authService.login(body);
       setCookie(response, tokens.access);
       return {
@@ -72,6 +85,9 @@ export class AuthController {
       refreshToken: tokens.refresh,
     };
   }
+  @Throttle({
+    default: { limit: +BRUTE_FORCE_WHOAMI_LIMIT, ttl: +BRUTE_FORCE_WHOAMI_TTL },
+  })
   @ApiOperation({
     summary: 'Получить информацию о пользователе по access токену',
   })

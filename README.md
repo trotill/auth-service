@@ -65,3 +65,22 @@ ALLOW_USER_REGISTRATION=0
 
 ### Запрещать получение списка пользователей всем группам кроме админа
 DENY_GET_USER_LIST=0
+
+## Защита от brute force атак
+### Задержка в ms, в случае неудачи логина
+BRUTE_FORCE_LOGIN_DELAY = 2000
+
+### Интервал в ms, окно разрешенного кол. запросов на маршрут login
+BRUTE_FORCE_LOGIN_TTL = 10000
+### Разрешенное кол. запросов за интервал BRUTE_FORCE_LOGIN_TTL
+BRUTE_FORCE_LOGIN_LIMIT = 10
+
+### Интервал в ms, окно разрешенного кол. запросов на маршрут whoami
+BRUTE_FORCE_WHOAMI_TTL = 60000
+### Разрешенное кол. запросов за интервал BRUTE_FORCE_WHOAMI_TTL
+BRUTE_FORCE_WHOAMI_LIMIT = 100000
+
+### Интервал в ms, окно разрешенного кол. запросов на любые маршруты по умолчанию
+BRUTE_FORCE_DEFAULT_TTL = 20000
+### Разрешенное кол. запросов за интервал BRUTE_FORCE_DEFAULT_TTL
+BRUTE_FORCE_DEFAULT_LIMIT = 10000

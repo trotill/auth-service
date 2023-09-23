@@ -12,6 +12,11 @@ import { UsersModel } from 'src/db/models/users.model';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtGlobalGuard } from './guard/jwtGlobalGuard';
 import { RoleGlobalGuard } from './guard/roleGlobalGuard';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import {
+  BRUTE_FORCE_DEFAULT_LIMIT,
+  BRUTE_FORCE_DEFAULT_TTL,
+} from './utils/const';
 
 const models = [UsersModel, SessionsModel];
 @Module({
@@ -19,12 +24,22 @@ const models = [UsersModel, SessionsModel];
     UsersModule,
     AuthModule,
     SequelizeModule.forRoot({ ...sequelizeConfig['development'], models }),
+    ThrottlerModule.forRoot([
+      {
+        ttl: +BRUTE_FORCE_DEFAULT_TTL,
+        limit: +BRUTE_FORCE_DEFAULT_LIMIT,
+      },
+    ]),
   ],
   providers: [
     { provide: APP_GUARD, useClass: JwtGlobalGuard },
     {
       provide: APP_GUARD,
       useClass: RoleGlobalGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
     },
   ],
 })
