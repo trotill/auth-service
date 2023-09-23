@@ -26,7 +26,7 @@ import { setCookie } from './auth.utils';
 import { errorMessage } from 'src/utils/error';
 import { delay } from 'src/utils/time';
 import { Throttle } from '@nestjs/throttler';
-let counter = 0;
+
 @ApiTags('Авторизация')
 @Controller('auth')
 export class AuthController {
@@ -48,8 +48,6 @@ export class AuthController {
     @Res({ passthrough: true }) response: Response,
   ): Promise<JWT_Refresh> {
     try {
-      console.log('counter', ++counter);
-
       const tokens = await this.authService.login(body);
       setCookie(response, tokens.access);
       return {
