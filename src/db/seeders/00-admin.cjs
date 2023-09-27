@@ -17,7 +17,7 @@ module.exports = {
         firstName: 'firstName',
         password: getPasswordHash(saltedHashedPassword),
         lastName: 'lastName',
-        email: 'email',
+        email: 'email@mails.ru',
         createdAt: new Date(),
         updatedAt: new Date()
       }]);

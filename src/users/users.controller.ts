@@ -53,7 +53,11 @@ export class UsersController {
     const { locked, role, ...params } = body;
     //С правами ниже админа, можно менять только себя, запрещено менять роль и блокировать/разблокировать
     if ([UserRoles.admin].includes(tokenRole as UserRoles)) {
-      return this.usersService.update(login, { locked, role, ...params });
+      return this.usersService.update(
+        login,
+        { locked, role, ...params },
+        tokenLogin,
+      );
     }
     if (tokenLogin !== login) {
       throw new HttpException(
@@ -61,7 +65,7 @@ export class UsersController {
         HttpStatus.FORBIDDEN,
       );
     }
-    return this.usersService.update(login, params);
+    return this.usersService.update(login, params, tokenLogin);
   }
 
   @ApiOperation({ summary: 'Удалить пользователя' })
