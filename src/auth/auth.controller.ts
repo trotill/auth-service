@@ -23,7 +23,7 @@ import {
   BRUTE_FORCE_WHOAMI_TTL,
 } from 'src/utils/const';
 import { setCookie } from './auth.utils';
-import { errorMessage } from 'src/utils/error';
+import { ErrorMessage } from 'src/utils/error';
 import { delay } from 'src/utils/time';
 import { Throttle } from '@nestjs/throttler';
 
@@ -96,6 +96,6 @@ export class AuthController {
       const accessToken = request.cookies[ACCESS_TOKEN_COOKIE_NAME];
       return this.authService.getUserInfoByToken(accessToken);
     }
-    throw new HttpException(errorMessage.BadRequest, HttpStatus.BAD_REQUEST);
+    throw new HttpException(ErrorMessage.BadRequest, HttpStatus.BAD_REQUEST);
   }
 }

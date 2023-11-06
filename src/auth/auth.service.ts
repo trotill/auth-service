@@ -12,7 +12,7 @@ import {
 import { SessionsModel } from 'src/db/models/sessions.model';
 import { sign } from 'jsonwebtoken';
 import jwtKeys from 'src/utils/keys';
-import { errorMessage } from 'src/utils/error';
+import { ErrorMessage } from 'src/utils/error';
 import { verifyToken } from './auth.utils';
 import type { JwtPair } from './auth.types';
 import { SessionStat } from './auth.types';
@@ -91,9 +91,9 @@ export class AuthService {
       where: { login },
     });
     if (!user)
-      throw new HttpException(errorMessage.UserNotFound, HttpStatus.FORBIDDEN);
+      throw new HttpException(ErrorMessage.UserNotFound, HttpStatus.FORBIDDEN);
     if (user.locked) {
-      throw new HttpException(errorMessage.UserLocked, HttpStatus.FORBIDDEN);
+      throw new HttpException(ErrorMessage.UserLocked, HttpStatus.FORBIDDEN);
     }
     const { sessionId: sid } =
       (await this.sessionRepository.findOne({
@@ -122,7 +122,7 @@ export class AuthService {
     }
     //Если пароли не совпадают, исключение
     throw new HttpException(
-      errorMessage.IncorrectLoginPassword,
+      ErrorMessage.IncorrectLoginPassword,
       HttpStatus.BAD_REQUEST,
     );
   }
@@ -133,7 +133,7 @@ export class AuthService {
   async refresh(refreshToken: string): Promise<JwtPair> {
     const check = await verifyToken(refreshToken, this.publicKey).catch(() => {
       throw new HttpException(
-        errorMessage.RefreshTokenError,
+        ErrorMessage.RefreshTokenError,
         HttpStatus.BAD_REQUEST,
       );
     });
@@ -143,11 +143,11 @@ export class AuthService {
     });
     if (!user)
       throw new HttpException(
-        errorMessage.UserNotFound,
+        ErrorMessage.UserNotFound,
         HttpStatus.BAD_REQUEST,
       );
     if (user.locked) {
-      throw new HttpException(errorMessage.UserLocked, HttpStatus.FORBIDDEN);
+      throw new HttpException(ErrorMessage.UserLocked, HttpStatus.FORBIDDEN);
     }
     const session = await this.sessionRepository.findOne({
       raw: true,
@@ -168,7 +168,7 @@ export class AuthService {
     }
     //Если сессия отсутствует, исключение
     throw new HttpException(
-      errorMessage.SessionNotFound,
+      ErrorMessage.SessionNotFound,
       HttpStatus.BAD_REQUEST,
     );
   }
@@ -176,7 +176,7 @@ export class AuthService {
     const { login } = await verifyToken(accessToken, this.publicKey).catch(
       () => {
         throw new HttpException(
-          errorMessage.Unauthorized,
+          ErrorMessage.Unauthorized,
           HttpStatus.UNAUTHORIZED,
         );
       },
@@ -188,7 +188,7 @@ export class AuthService {
     //Если пользователя не существует, исключение
     if (!role)
       throw new HttpException(
-        errorMessage.UserNotFound,
+        ErrorMessage.UserNotFound,
         HttpStatus.BAD_REQUEST,
       );
 

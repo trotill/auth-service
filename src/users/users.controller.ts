@@ -25,7 +25,7 @@ import {
 } from './users.dto';
 import { UsersService } from './users.service';
 import { Roles } from '../guard/roles.decorator';
-import { errorMessage } from '../utils/error';
+import { ErrorMessage } from '../utils/error';
 import type { RequestWU } from './user.types';
 import { ALLOW_USER_REGISTRATION, DENY_GET_USER_LIST } from '../utils/const';
 
@@ -61,7 +61,7 @@ export class UsersController {
     }
     if (tokenLogin !== login) {
       throw new HttpException(
-        errorMessage.NotEnoughAccessRights,
+        ErrorMessage.NotEnoughAccessRights,
         HttpStatus.FORBIDDEN,
       );
     }
@@ -76,7 +76,7 @@ export class UsersController {
     const count = await this.usersService.delete(login);
     if (!count) {
       throw new HttpException(
-        errorMessage.UserNotFound,
+        ErrorMessage.UserNotFound,
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -102,7 +102,7 @@ export class UsersController {
   async register(@Body() body: RegisterUser): Promise<void> {
     if (!+ALLOW_USER_REGISTRATION) {
       throw new HttpException(
-        errorMessage.NotAcceptable,
+        ErrorMessage.NotAcceptable,
         HttpStatus.NOT_ACCEPTABLE,
       );
     }

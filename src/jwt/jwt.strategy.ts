@@ -6,7 +6,7 @@ import { ACCESS_TOKEN_COOKIE_NAME } from 'src/utils/const';
 import jwtKeys from 'src/utils/keys';
 import { InjectModel } from '@nestjs/sequelize';
 import { UsersModel } from 'src/db/models/users.model';
-import { errorMessage } from 'src/utils/error';
+import { ErrorMessage } from 'src/utils/error';
 import type { JwtValidate } from './jwt.types';
 
 @Injectable()
@@ -37,7 +37,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         raw: true,
       })) ?? {};
     if (locked)
-      throw new HttpException(errorMessage.UserLocked, HttpStatus.FORBIDDEN);
+      throw new HttpException(ErrorMessage.UserLocked, HttpStatus.FORBIDDEN);
     return {
       role,
       login,

@@ -1,4 +1,4 @@
-export enum errorMessage {
+export enum ErrorMessage {
   IncorrectLoginPassword = 'IncorrectLoginPassword',
   BadRequest = 'BadRequest',
   SessionNotFound = 'SessionNotFound',

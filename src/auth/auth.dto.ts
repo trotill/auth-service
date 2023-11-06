@@ -19,7 +19,7 @@ export class LoginParams extends IntersectionType(UserLogin, SessionId) {
   @IsString()
   @IsNotEmpty()
   @ApiProperty({
-    example: '3ZRwlSi7HIPQjzCI1AQ/R0KJH08=',
+    example: '2CSU8F1pF7oC96qilonMtES7c/IDgIdssF0fN1N7eJI=',
     description:
       'Пароль+логин в md5 (в примере логин - admin пароль - 12345678 md5sum(admin12345678))',
     type: String,

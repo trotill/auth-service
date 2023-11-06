@@ -18,7 +18,7 @@ import { UsersModel } from 'src/db/models/users.model';
 import { Op } from 'sequelize';
 import { SessionsModel } from 'src/db/models/sessions.model';
 import { getPasswordHash } from 'src/utils/jsutils.cjs';
-import { errorMessage } from 'src/utils/error';
+import { ErrorMessage } from 'src/utils/error';
 import { DENY_ADMIN_CHANGE_ADMIN } from 'src/utils/const';
 
 @Injectable()
@@ -71,7 +71,7 @@ export class UsersService {
     });
     if (!userInfo)
       throw new HttpException(
-        errorMessage.UserNotFound,
+        ErrorMessage.UserNotFound,
         HttpStatus.BAD_REQUEST,
       );
     return userInfo;
@@ -123,7 +123,7 @@ export class UsersService {
       })) ?? {};
     if (login === registerParams.login) {
       throw new HttpException(
-        errorMessage.NotAcceptable,
+        ErrorMessage.NotAcceptable,
         HttpStatus.NOT_ACCEPTABLE,
       );
     }
