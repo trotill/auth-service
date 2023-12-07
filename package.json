@@ -1,6 +1,6 @@
 {
   "name": "auth-service-nestjs",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "",
   "author": "",
   "license": "UNLICENSED",
@@ -95,5 +95,6 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/trotill/auth-service.git"
-  }
+  },
+  "keywords": ["service","nestjs","authorization","auth","authority","embedded"]
 }
