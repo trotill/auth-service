@@ -11,8 +11,12 @@ Roles below admin cannot block users, change roles, delete/create/edit users,
 but can get a list of all users. Receiving a list of users for roles below admin can be prohibited using the DENY_GET_USER_LIST option
 
 
-By default, external user registration is prohibited; you can enable this with the ALLOW_USER_REGISTRATION option
+By default, external user registration is prohibited; you can enable this with the ALLOW_USER_REGISTRATION option  
 
+The operation of the service and an example of integration can be viewed here https://github.com/trotill/auth-service_use_example
+
+## Example backend + frontend
+https://github.com/trotill/auth-service_use_example
 
 ## Dependencies
 1. nodejs 18.14.0
