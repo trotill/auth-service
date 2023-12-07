@@ -1,99 +1,100 @@
-## О сервисе
-Сервис авторизации предназначен для использования в embedded и легких серверных системах.
-Сервис обеспечивает JWT авторизацию и управление пользователями, имеет возможность легкой интеграции
-с бэкендом на nestjs и имеет защиту от brute force атак
+# Service auth-service-nestjs
+## About the service
+The authorization service is intended for use in embedded and light server systems.
+The service provides JWT authorization and user management, and has the ability to easily integrate
+with a nestjs backend and protection against brute force attacks
 
 
-В сервисе доступны 3 роли, admin, operator и guest, admin может все, если не установлена опция DENY_ADMIN_CHANGE_ADMIN
+There are 3 roles available in the service, admin, operator and guest, admin can do everything unless the DENY_ADMIN_CHANGE_ADMIN option is set
 
-Роли ниже админа не могут блокировать пользователей, менять роль, удалять/создавать/изменять пользователей,
-но могут получать список всех пользователей. Получение списка пользователей ролям ниже админа можно запретить опцией DENY_GET_USER_LIST
-
-
-По умолчанию регистрация пользователей со стороны запрещена, можно включить это опцией ALLOW_USER_REGISTRATION
+Roles below admin cannot block users, change roles, delete/create/edit users,
+but can get a list of all users. Receiving a list of users for roles below admin can be prohibited using the DENY_GET_USER_LIST option
 
 
-## Зависимости
+By default, external user registration is prohibited; you can enable this with the ALLOW_USER_REGISTRATION option
+
+
+## Dependencies
 1. nodejs 18.14.0
 2. node-gyp
 3. npm
 4. sqlite3
 
-## Установка/настройка сервиса
-1. Скопируйте .env.example в .env
-   В .env скорректируйте переменные (см. ниже описание)
+## Installation/configuration of the service
+1. Copy .env.example to .env  
+   In .env, adjust the variables (see description below)
 2. npm install
-3. публичный и приватный ключи, БД генерируются автоматически при старте
-4. перед первым запуском в режиме разработки нужно сделать миграции и сиды (в прод режиме, этого делать не нужно)
+3. public and private keys, databases are generated automatically at startup
+4. Before the first launch in development mode, you need to make migrations and seeds (in production mode, this is not necessary)
    - npm run migrate
    - npm run seed
 
-## Запуск в режиме прода
+## Running in production mode
 npm run start
 
-## Запуск в режиме разработки
+## Running in development mode
 
 npm run start:dev
 
-## Запуск в docker контейнере
-1. запуск npm run docker:up
-2. останов npm run docker:down
+## Running in a docker container
+1. npm run docker:up (run)
+2. npm run docker:down (stop)
 
-## Опции .env файла
-### Порт веб сервера
+## .env file options
+### Web server port
 LISTEN_HTTP_PORT=4499
-### Путь к папке для ключей и БД
+### Path to the folder for keys and database
 STORE_PATH=store
 
-### Имя файла БД
+### DB file name
 DB_PATH=auth.db
 
-### Имя БД
+### DB name
 DB_NAME=database_development
 
-### Пользователь БД
+### Database user
 DB_USER=develinux
 
-### Пароль к БД
+### DB password
 DB_PASSWORD=cnfhjcnm
 
-### Время жизни access токена
+### Access token lifetime
 ACCESS_TIMEOUT=60s
 
-### Время жизни refresh токена
+### Lifetime of refresh token
 REFRESH_TIMEOUT=90d
 
-### Порт сервиса из docker (проксирование на LISTEN_HTTP_PORT в докере). Используется только при запуске в докер контейнере.
+### Service port from docker (proxy to LISTEN_HTTP_PORT in docker). Used only when running in a docker container.
 PUBLIC_HTTP_PORT=7777
 
-### Сохранять сваггер файл при запуске в папке swagger
+### Save the swagger file on startup in the swagger folder
 SAVE_SWAGGER=1
 
-### Разрешить пользователям самим регистрироваться
-#### В этом режиме разрешен ендпоинт register, позволяющий пользователям самим регистрироваться в системе, с низшей ролью и включеной блокировкой
+### Allow users to register themselves
+#### In this mode, the register endpoint is enabled, allowing users to register themselves in the system, with a low role and blocking enabled
 ALLOW_USER_REGISTRATION=0
 
-### Запрещать получение списка пользователей всем группам кроме админа
+### Deny all groups except admin from receiving a list of users
 DENY_GET_USER_LIST=0
 
-### Админ не может изменять пароль другого админа, блокировать и удалять любого админа
+### An admin cannot change the password of another admin, block or delete any admin
 DENY_ADMIN_CHANGE_ADMIN=0
 
-## Защита от brute force атак
-### Задержка в ms, в случае неудачи логина
+## Protection against brute force attacks
+### Delay in ms if login fails
 BRUTE_FORCE_LOGIN_DELAY = 2000
 
-### Интервал в ms, окно разрешенного кол. запросов на маршрут login
+### Interval in ms, window of the allowed number of requests for the login route
 BRUTE_FORCE_LOGIN_TTL = 10000
-### Разрешенное кол. запросов за интервал BRUTE_FORCE_LOGIN_TTL
+### Allowed number of requests per interval BRUTE_FORCE_LOGIN_TTL
 BRUTE_FORCE_LOGIN_LIMIT = 10
 
-### Интервал в ms, окно разрешенного кол. запросов на маршрут whoami
+### Interval in ms, window of the allowed number of requests for a whoami route
 BRUTE_FORCE_WHOAMI_TTL = 60000
-### Разрешенное кол. запросов за интервал BRUTE_FORCE_WHOAMI_TTL
+### Allowed number of requests per interval BRUTE_FORCE_WHOAMI_TTL
 BRUTE_FORCE_WHOAMI_LIMIT = 100000
 
-### Интервал в ms, окно разрешенного кол. запросов на любые маршруты по умолчанию
+### Interval in ms, window of the allowed number of requests for any routes by default
 BRUTE_FORCE_DEFAULT_TTL = 20000
-### Разрешенное кол. запросов за интервал BRUTE_FORCE_DEFAULT_TTL
+### Allowed number of requests per interval BRUTE_FORCE_DEFAULT_TTL
 BRUTE_FORCE_DEFAULT_LIMIT = 10000
