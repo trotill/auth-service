@@ -1,9 +1,14 @@
 {
   "name": "auth-service-nestjs",
-  "version": "0.0.3",
-  "description": "",
-  "author": "",
-  "license": "UNLICENSED",
+  "version": "0.0.4",
+  "description": "Authorization service for lightweight systems",
+  "author": "develinux",
+  "homepage":"https://github.com/trotill/",
+  "os": ["linux"],
+  "bugs":{
+      "email":"info@11-parts.com"
+  },
+  "license": "MIT",
   "scripts": {
     "build": "rimraf pack&&nest build",
     "build:pack": "npm run build --path='tsconfig.pack.json'&&mkdir pack&&cp .env.example package.json pack/&&cp node_modules/ pack/ -R&&cp src/db/config src/db/migrations src/db/seeders pack -R",

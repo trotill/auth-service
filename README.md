@@ -19,17 +19,20 @@ The operation of the service and an example of integration can be viewed here ht
 https://github.com/trotill/auth-service_use_example
 
 ## Dependencies
-1. nodejs 18.14.0
-2. node-gyp
-3. npm
-4. sqlite3
+1. tested on Ubuntu 22.04 and Docker
+2. nodejs 18.14.0
+3. node-gyp
+4. npm
+5. sqlite3
 
 ## Installation/configuration of the service
-1. Copy .env.example to .env  
+1. git clone https://github.com/trotill/auth-service.git
+2. cd auth-service
+3. Copy .env.example to .env  
    In .env, adjust the variables (see description below)
-2. npm install
-3. public and private keys, databases are generated automatically at startup
-4. Before the first launch in development mode, you need to make migrations and seeds (in production mode, this is not necessary)
+4. npm install
+5. public and private keys, databases are generated automatically at startup
+6. Before the first launch in development mode, you need to make migrations and seeds (in production mode, this is not necessary)
    - npm run migrate
    - npm run seed
 
