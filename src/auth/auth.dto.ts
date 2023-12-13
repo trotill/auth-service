@@ -9,7 +9,7 @@ export class SessionId {
   @ApiProperty({
     example: DEFAULT_SESSION_ID,
     default: DEFAULT_SESSION_ID,
-    description: 'ID сессии',
+    description: 'Session ID',
     required: false,
   })
   readonly sessionId: string;
@@ -21,17 +21,18 @@ export class LoginParams extends IntersectionType(UserLogin, SessionId) {
   @ApiProperty({
     example: '2CSU8F1pF7oC96qilonMtES7c/IDgIdssF0fN1N7eJI=',
     description:
-      'Пароль+логин в md5 (в примере логин - admin пароль - 12345678 md5sum(admin12345678))',
+      'Password + login in md5 (in the example login - admin password - 12345678 md5sum(admin12345678))',
     type: String,
     required: true,
   })
   readonly password: string;
 }
+export class LogoutParams extends IntersectionType(UserLogin, SessionId) {}
 export class JWT_Refresh {
   @IsString()
   @IsNotEmpty()
   @ApiProperty({
-    description: 'refresh токен',
+    description: 'Refresh token',
     required: true,
   })
   readonly refreshToken: string;

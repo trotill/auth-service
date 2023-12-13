@@ -22,7 +22,7 @@ export class UserLogin {
   @IsNotEmpty()
   @ApiProperty({
     example: 'admin',
-    description: 'логин',
+    description: 'Login',
     required: true,
   })
   readonly login: string;
@@ -30,28 +30,28 @@ export class UserLogin {
 export class UserBase extends UserLogin {
   @IsString()
   @ApiProperty({
-    example: 'Иван',
-    description: 'имя',
+    example: 'Ivan',
+    description: 'First name',
     required: true,
   })
   readonly firstName: string;
   @IsString()
   @ApiProperty({
-    example: 'Иванов',
-    description: 'фамилия',
+    example: 'Ivanov',
+    description: 'Last name',
     required: true,
   })
   readonly lastName: string;
   @IsString()
   @ApiProperty({
     example: 'example@gmail.com',
-    description: 'Почта',
+    description: 'Mail',
   })
   readonly email: string;
   @IsString()
   @ApiProperty({
     example: UserRoles.admin,
-    description: 'роль',
+    description: 'Role',
     enum: UserRoles,
     required: true,
   })
@@ -62,7 +62,7 @@ export class UserBase extends UserLogin {
 
   @ApiProperty({
     example: 0,
-    description: 'Заблокирован - 1/ разблокирован - 0',
+    description: 'Locked - 1/unlocked - 0',
     type: 'integer',
     format: 'int32',
     required: true,
@@ -77,7 +77,7 @@ export class UserBase extends UserLogin {
   @IsNotEmpty()
   @ApiProperty({
     example: '384633ad37a18b3b4fc5bf3e371d6e9f',
-    description: 'Пароль+логин в md5',
+    description: 'Password + login in md5',
     type: String,
     required: false,
   })
@@ -86,7 +86,7 @@ export class UserBase extends UserLogin {
   @IsString()
   @IsNotEmpty()
   @ApiProperty({
-    description: 'Время создания',
+    description: 'Creation time',
     type: Date,
     required: false,
   })
@@ -95,7 +95,7 @@ export class UserBase extends UserLogin {
   @IsString()
   @IsNotEmpty()
   @ApiProperty({
-    description: 'Время обновления',
+    description: 'Update time',
     type: Date,
     required: false,
   })
@@ -116,14 +116,14 @@ export class UserItem extends OmitType(UserBase, ['password'] as const) {}
 export class UserList {
   @ApiProperty({
     example: [],
-    description: 'Список пользователей',
+    description: 'User list',
     type: UserItem,
     isArray: true,
   })
   items: Array<UserItem>;
   @ApiProperty({
     example: 0,
-    description: 'Всего пользователей соответсвуют фильтру',
+    description: 'Total users match the filter',
     type: 'integer',
     format: 'int32',
   })
@@ -134,7 +134,7 @@ export class GetAllParam {
   @ApiProperty({
     example: 200000,
     default: 200000,
-    description: 'Лимит',
+    description: 'Limit',
     type: 'integer',
     format: 'int32',
     minimum: 1,
@@ -147,7 +147,7 @@ export class GetAllParam {
   @ApiProperty({
     example: 0,
     default: 0,
-    description: 'Смещение',
+    description: 'Offset',
     type: 'integer',
     format: 'int32',
     minimum: 0,
@@ -158,7 +158,7 @@ export class GetAllParam {
   offset: number;
 
   @ApiProperty({
-    description: 'Столбец сортировки',
+    description: 'Sort Column',
     default: 'login',
     required: false,
   })
@@ -167,7 +167,7 @@ export class GetAllParam {
   sort: string;
 
   @ApiProperty({
-    description: 'Сортировка. Направление. "ASC" - прямое, "DESC" - обратное.',
+    description: 'Sorting. Direction. "ASC" - direct, "DESC" - reverse.',
     default: SORT_ORDERS[0],
     enum: SORT_ORDERS,
     required: false,
@@ -177,7 +177,7 @@ export class GetAllParam {
   order: string;
 
   @ApiProperty({
-    description: 'Поисковая строка. Поиск по имени, фамилии, email',
+    description: 'Search string. Search by first name, last name, email',
     example: '',
     required: false,
   })

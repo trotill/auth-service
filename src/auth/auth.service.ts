@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { LoginParams } from './auth.dto';
+import { LoginParams, LogoutParams } from './auth.dto';
 import { UserItem, UserRoles } from 'src/users/users.dto';
 import { InjectModel } from '@nestjs/sequelize';
 import { UsersModel } from 'src/db/models/users.model';
@@ -126,8 +126,8 @@ export class AuthService {
       HttpStatus.BAD_REQUEST,
     );
   }
-  async logout(login: string): Promise<number> {
-    return this.sessionRepository.destroy({ where: { login } });
+  async logout({ login, sessionId }: LogoutParams): Promise<number> {
+    return this.sessionRepository.destroy({ where: { login, sessionId } });
   }
 
   async refresh(refreshToken: string): Promise<JwtPair> {
@@ -166,7 +166,7 @@ export class AuthService {
       );
       return pair;
     }
-    //Если сессия отсутствует, исключение
+    //If session is missing, exception
     throw new HttpException(
       ErrorMessage.SessionNotFound,
       HttpStatus.BAD_REQUEST,
@@ -185,7 +185,7 @@ export class AuthService {
     const { role, locked, createdAt, updatedAt, lastName, firstName, email } =
       (await this.userRepository.findOne({ where: { login }, raw: true })) ??
       {};
-    //Если пользователя не существует, исключение
+    //If the user does not exist, an exception
     if (!role)
       throw new HttpException(
         ErrorMessage.UserNotFound,

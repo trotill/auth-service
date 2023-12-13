@@ -5,14 +5,13 @@ import {
   HttpCode,
   HttpException,
   HttpStatus,
-  Param,
   Post,
   Req,
   Res,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { JWT_Refresh, LoginParams } from './auth.dto';
-import { UserItem, UserLogin } from 'src/users/users.dto';
+import { JWT_Refresh, LoginParams, LogoutParams } from './auth.dto';
+import { UserItem } from 'src/users/users.dto';
 import { AuthService } from './auth.service';
 import {
   ACCESS_TOKEN_COOKIE_NAME,
@@ -27,7 +26,7 @@ import { ErrorMessage } from 'src/utils/error';
 import { delay } from 'src/utils/time';
 import { Throttle } from '@nestjs/throttler';
 
-@ApiTags('Авторизация')
+@ApiTags('Authorization')
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
@@ -38,7 +37,7 @@ export class AuthController {
     },
   })
   @ApiOperation({
-    summary: 'Залогиниться (access токен устанавливается в сервер куку!!!)',
+    summary: 'Log in (access token is installed in the cookie server!!!)',
   })
   @ApiResponse({ status: 200, type: JWT_Refresh })
   @HttpCode(200)
@@ -58,18 +57,26 @@ export class AuthController {
       throw e;
     }
   }
-  @ApiOperation({ summary: 'Разлогиниться' })
+  @ApiOperation({ summary: 'Log out' })
   @ApiResponse({ status: 204 })
   @HttpCode(204)
-  @Post('logout/:login')
+  @Post('logout')
   async logout(
-    @Param() { login }: UserLogin,
+    @Body() body: LogoutParams,
     @Res({ passthrough: true }) response: Response,
+    @Req() request: Request,
   ): Promise<number> {
-    setCookie(response, '');
-    return this.authService.logout(login);
+    if ('cookies' in request) {
+      const accessToken = request.cookies[ACCESS_TOKEN_COOKIE_NAME];
+      const { login } = await this.authService.getUserInfoByToken(accessToken);
+      if (login === body.login) {
+        setCookie(response, '');
+        return this.authService.logout(body);
+      }
+    }
+    throw new HttpException(ErrorMessage.BadRequest, HttpStatus.BAD_REQUEST);
   }
-  @ApiOperation({ summary: 'Получить новый access токен' })
+  @ApiOperation({ summary: 'Get a new access token' })
   @ApiResponse({ status: 200, type: JWT_Refresh })
   @HttpCode(200)
   @Post('refresh')
@@ -87,7 +94,7 @@ export class AuthController {
     default: { limit: +BRUTE_FORCE_WHOAMI_LIMIT, ttl: +BRUTE_FORCE_WHOAMI_TTL },
   })
   @ApiOperation({
-    summary: 'Получить информацию о пользователе по access токену',
+    summary: 'Get information about the user using an access token',
   })
   @ApiResponse({ status: 200, type: UserItem })
   @Get()

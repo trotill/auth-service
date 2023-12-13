@@ -29,11 +29,11 @@ import { ErrorMessage } from '../utils/error';
 import type { RequestWU } from './user.types';
 import { ALLOW_USER_REGISTRATION, DENY_GET_USER_LIST } from '../utils/const';
 
-@ApiTags('Управление пользователями')
+@ApiTags('User management')
 @Controller('users')
 export class UsersController {
   constructor(private usersService: UsersService) {}
-  @ApiOperation({ summary: 'Создать пользователя' })
+  @ApiOperation({ summary: 'Create a user' })
   @HttpCode(204)
   @Roles([UserRoles.admin])
   @Post()
@@ -41,7 +41,7 @@ export class UsersController {
     await this.usersService.create(body);
   }
 
-  @ApiOperation({ summary: 'Изменить пользователя' })
+  @ApiOperation({ summary: 'Change user' })
   @HttpCode(204)
   @Put(':login')
   async update(
@@ -51,7 +51,7 @@ export class UsersController {
   ): Promise<[number]> {
     const { login: tokenLogin, role: tokenRole } = request.user ?? {};
     const { locked, role, ...params } = body;
-    //С правами ниже админа, можно менять только себя, запрещено менять роль и блокировать/разблокировать
+    //With rights below admin, you can only change yourself, it is forbidden to change the role and block/unblock
     if ([UserRoles.admin].includes(tokenRole as UserRoles)) {
       return this.usersService.update(
         login,
@@ -68,7 +68,7 @@ export class UsersController {
     return this.usersService.update(login, params, tokenLogin);
   }
 
-  @ApiOperation({ summary: 'Удалить пользователя' })
+  @ApiOperation({ summary: 'Delete user' })
   @HttpCode(204)
   @Roles([UserRoles.admin])
   @Delete(':login')
@@ -82,7 +82,7 @@ export class UsersController {
     }
   }
 
-  @ApiOperation({ summary: 'Получить список пользователей' })
+  @ApiOperation({ summary: 'Get list of users' })
   @ApiResponse({ status: 200, type: UserList })
   @Get()
   async getAll(
@@ -95,7 +95,7 @@ export class UsersController {
     return this.usersService.getAll(query);
   }
 
-  @ApiOperation({ summary: 'Зарегистрировать нового пользователя' })
+  @ApiOperation({ summary: 'Register a new user' })
   @ApiResponse({ status: 204 })
   @HttpCode(204)
   @Post('register')

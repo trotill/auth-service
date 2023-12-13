@@ -6,7 +6,7 @@ const password="admin"
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    // for browser use jshashes library
+    // for browser use crypto-js library
     // const saltedHashedPassword=new jshashes.SHA256().b64(login + password)
     const saltedHashedPassword = getPasswordHash(login + password)
     // 2CSU8F1pF7oC96qilonMtES7c/IDgIdssF0fN1N7eJI= for test
