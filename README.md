@@ -2,7 +2,9 @@
 ## About the service
 The authorization service is intended for use in embedded and light server systems.
 The service provides JWT authorization and user management, and has the ability to easily integrate
-with a nestjs backend and protection against brute force attacks
+with a nestjs backend and protection against brute force attacks.  
+  
+Auth-service-nestjs is not an npm library, it is a nodejs microservice. For installation, do not use the command npm i auth-service-nestjs, read the instructions below.
 
 
 There are 3 roles available in the service, admin, operator and guest, admin can do everything unless the DENY_ADMIN_CHANGE_ADMIN option is set
