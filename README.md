@@ -22,7 +22,7 @@ https://github.com/trotill/auth-service_use_example
 
 ## Dependencies
 1. tested on Ubuntu 22.04 and Docker
-2. nodejs 18.14.0
+2. nodejs no lower than version 18
 3. node-gyp
 4. npm
 5. sqlite3
