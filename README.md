@@ -49,6 +49,14 @@ npm run start:dev
 1. npm run docker:up (run)
 2. npm run docker:down (stop)
 
+## Сhecking functionality
+1. In the .env config set SHOW_API_DOCS=1
+2. Start the service
+3. Go to the link http://localhost:7777/api/docs in browser. You will see swagger interactive content, here you can test any endpoint.  
+
+## Integration into your application
+An example of integration is here https://github.com/trotill/auth-service_use_example
+
 ## .env file options
 ### Web server port
 LISTEN_HTTP_PORT=4499
@@ -78,6 +86,9 @@ PUBLIC_HTTP_PORT=7777
 
 ### Save the swagger file on startup in the swagger folder
 SAVE_SWAGGER=1
+
+### Show swagger API on /api/docs route. For example, at http://localhost:7777/api/docs
+SHOW_API_DOCS=1
 
 ### Allow users to register themselves
 #### In this mode, the register endpoint is enabled, allowing users to register themselves in the system, with a low role and blocking enabled

@@ -1,6 +1,6 @@
 {
   "name": "auth-service-nestjs",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Authorization service for lightweight systems",
   "author": "develinux",
   "homepage":"https://github.com/trotill/",
