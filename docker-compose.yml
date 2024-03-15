@@ -2,6 +2,7 @@ version: '3.0'
 
 services:
   auth_service:
+    image: auth_service
     networks:
       - auth_service
     container_name: auth_service
