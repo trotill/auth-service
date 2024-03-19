@@ -177,7 +177,8 @@ export class GetAllParam {
   order: string;
 
   @ApiProperty({
-    description: 'Search string. Search by first name, last name, email',
+    description:
+      'Search string. Search by first name, last name, email and login',
     example: '',
     required: false,
   })

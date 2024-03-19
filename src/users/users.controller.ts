@@ -18,6 +18,7 @@ import {
   GetAllParam,
   RegisterUser,
   UserCreate,
+  UserItem,
   UserList,
   UserLogin,
   UserRoles,
@@ -93,6 +94,37 @@ export class UsersController {
       throw new ForbiddenException();
     }
     return this.usersService.getAll(query);
+  }
+  @ApiOperation({ summary: 'Get user info' })
+  @ApiResponse({ status: 200, type: UserItem })
+  @Get(':login')
+  async getUserInfo(
+    @Param() { login }: UserLogin,
+    @Req() request: RequestWU,
+  ): Promise<UserItem> {
+    if (+DENY_GET_USER_LIST && request.user.role !== UserRoles.admin) {
+      throw new ForbiddenException();
+    }
+    const {
+      login: loginResult,
+      role,
+      locked,
+      lastName,
+      firstName,
+      email,
+      createdAt,
+      updatedAt,
+    } = await this.usersService.getUser(login);
+    return {
+      login: loginResult,
+      role: role as UserRoles,
+      locked,
+      lastName,
+      firstName,
+      email,
+      createdAt,
+      updatedAt,
+    };
   }
 
   @ApiOperation({ summary: 'Register a new user' })
