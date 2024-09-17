@@ -78,6 +78,9 @@ DB_PASSWORD=cnfhjcnm
 ### Access token lifetime
 ACCESS_TIMEOUT=60s
 
+### Access token cookie max age
+ACCESS_TOKEN_COOKIE_MAX_AGE=31104000000
+
 ### Lifetime of refresh token
 REFRESH_TIMEOUT=90d
 

@@ -1,4 +1,7 @@
-import { ACCESS_TOKEN_COOKIE_NAME } from 'src/utils/const';
+import {
+  ACCESS_TOKEN_COOKIE_MAX_AGE,
+  ACCESS_TOKEN_COOKIE_NAME,
+} from 'src/utils/const';
 import type { JwtTokenPayload } from './auth.types';
 import { verify } from 'jsonwebtoken';
 
@@ -8,6 +11,7 @@ export function setCookie(response: Response, value: string) {
     // @ts-ignore
     response.cookie(ACCESS_TOKEN_COOKIE_NAME, value, {
       httpOnly: true,
+      maxAge: ACCESS_TOKEN_COOKIE_MAX_AGE,
     });
   }
 }

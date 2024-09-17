@@ -16,6 +16,7 @@ export const {
   BRUTE_FORCE_WHOAMI_LIMIT = '100000',
   BRUTE_FORCE_DEFAULT_TTL = '20000',
   BRUTE_FORCE_DEFAULT_LIMIT = '10000',
+  ACCESS_TOKEN_COOKIE_MAX_AGE = `${24 * 60 * 60 * 1000 * 360}`,
 } = process.env;
 export const DEFAULT_SESSION_ID = '-';
 export const ACCESS_TOKEN_COOKIE_NAME = 'access';
