@@ -1,12 +1,12 @@
 {
   "name": "auth-service-nestjs",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "Authorization service for lightweight systems",
   "author": "develinux",
   "homepage":"https://github.com/trotill/",
   "os": ["linux"],
   "bugs":{
-      "email":"info@11-parts.com"
+      "email":"monkeyhouse@mail.ru"
   },
   "license": "MIT",
   "scripts": {
@@ -45,7 +45,7 @@
     "class-validator": "^0.14.0",
     "cookie-parser": "^1.4.6",
     "dotenv": "^16.3.1",
-    "jsonwebtoken": "^9.0.1",
+    "jsonwebtoken": "^9.0.2",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
@@ -56,6 +56,10 @@
     "sequelize-cli": "^6.6.1",
     "sequelize-typescript": "^2.1.5",
     "sqlite3": "^5.1.6"
+  },
+  "resolutions": {
+    "wrap-ansi": "7.0.0",
+    "string-width": "4.1.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",

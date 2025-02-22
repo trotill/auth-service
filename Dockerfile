@@ -1,9 +1,11 @@
-FROM node:18.13
+FROM node:20.16-alpine
 
 WORKDIR /app
 
-RUN apt update && apt install sqlite3
+RUN apk update
+RUN apk add --no-cache sqlite
 ADD . /app
-RUN rm -rf /app/node_modules /app/dist /app/yarn.lock /app/.env /app/store/*
+RUN rm -rf /app/node_modules /app/dist /app/.env /app/store/*
 RUN yarn install
-CMD /bin/sh -c "yarn && yarn migrate && yarn seed && yarn start"
+RUN yarn build
+CMD /bin/sh -c "yarn start:pack"

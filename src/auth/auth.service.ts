@@ -10,7 +10,7 @@ import {
   REFRESH_TIMEOUT,
 } from 'src/utils/const';
 import { SessionsModel } from 'src/db/models/sessions.model';
-import { sign } from 'jsonwebtoken';
+import { SignOptions, sign } from 'jsonwebtoken';
 import jwtKeys from 'src/utils/keys';
 import { ErrorMessage } from 'src/utils/error';
 import { verifyToken } from './auth.utils';
@@ -72,12 +72,12 @@ export class AuthService {
     const accessToken = sign(
       { login, role, sessionId, type: 'access' },
       this.privateKey,
-      { algorithm: 'RS256', expiresIn: ACCESS_TIMEOUT },
+      { algorithm: 'RS256', expiresIn: ACCESS_TIMEOUT } as SignOptions,
     );
     const refreshToken = sign(
       { login, role, sessionId, type: 'refresh' },
       this.privateKey,
-      { algorithm: 'RS256', expiresIn: REFRESH_TIMEOUT },
+      { algorithm: 'RS256', expiresIn: REFRESH_TIMEOUT } as SignOptions,
     );
     return {
       access: accessToken,

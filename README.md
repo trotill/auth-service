@@ -103,6 +103,12 @@ DENY_GET_USER_LIST=0
 ### An admin cannot change the password of another admin, block or delete any admin
 DENY_ADMIN_CHANGE_ADMIN=0
 
+### Microservices feature
+#### Provides token-free access to all API users. In the .env config you need to set HEADER_X_USERS_UPDATE=1. The http header must have fields set HEADER_X_USER and HEADER_X_ROLE
+HEADER_X_USERS_UPDATE=0  
+HEADER_X_USER = x-login  
+HEADER_X_ROLE = x-role  
+
 ## Protection against brute force attacks
 ### Delay in ms if login fails
 BRUTE_FORCE_LOGIN_DELAY = 2000
